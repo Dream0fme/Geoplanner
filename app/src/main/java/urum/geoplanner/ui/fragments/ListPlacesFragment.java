@@ -19,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -34,6 +35,8 @@ import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.ui.MainActivity;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
+
+import static urum.geoplanner.utils.Utils.findNavController;
 
 
 public class ListPlacesFragment extends Fragment {
@@ -201,8 +204,7 @@ public class ListPlacesFragment extends Fragment {
                 break;
 
             case R.id.menuArchive:
-                mainActivity.changeLayoutForArchive(getParentFragmentManager());
-
+                findNavController(this).navigate(R.id.action_list_places_to_archive);
                 break;
 
             case R.id.buttonComplete:
