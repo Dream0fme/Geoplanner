@@ -101,6 +101,8 @@ public class PlaceActivity extends AppCompatActivity {
     private PlaceViewModel mPlaceViewModel;
 
 
+
+
     @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -374,7 +376,7 @@ public class PlaceActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if(extras.getBoolean("FROM_NOTIFICATION")){
-                placeId = extras.getLong("id_notification");
+                placeId = extras.getLong("id_notification", 0);
             } else placeId = extras.getLong("id");
 
             fromMaps = extras.getBoolean("fromMaps");
