@@ -219,8 +219,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     public void changeLayoutForArchive(FragmentManager fm) {
         if (fm != null) {
-            navController.navigate(R.id.archive);
-
+            navController.navigate(R.id.action_list_places_to_archive);
         } else {
             binding.fabButton.hide();
             slideDown();
@@ -330,8 +329,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
     public void addPlace(View view) {
-        Intent intent = new Intent(this, PlaceActivity.class);
-        startActivity(intent);
+        navController.navigate(R.id.action_list_places_to_placeActivity);
+        //Intent intent = new Intent(this, PlaceActivity.class);
+        //startActivity(intent);
     }
 
     @Override

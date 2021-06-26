@@ -62,6 +62,7 @@ import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static urum.geoplanner.utils.Utils.enableLayout;
+import static urum.geoplanner.utils.Utils.findNavController;
 import static urum.geoplanner.utils.Utils.round;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
@@ -611,7 +612,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             .append(",")
                             .append(getString(R.string.blank_space))
                             .append(round(addPoint.longitude, 5));
-                    //addressLine = round(addPoint.latitude, 5) + ", " + round(addPoint.longitude, 5);
                     addressNotFound = true;
                 } else {
                     addressLine.append(address.getLocality())
@@ -621,7 +621,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             .append(",")
                             .append(getString(R.string.blank_space))
                             .append(address.getFeatureName());
-                    //addressLine = address.getLocality() + ", " + address.getThoroughfare() + ", " + address.getFeatureName();
                     addressNotFound = false;
                 }
                 StringBuilder message = new StringBuilder();
@@ -674,7 +673,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             .append(",")
                             .append(getString(R.string.blank_space))
                             .append(round(addPoint.longitude, 5));
-                    //addressLine = round(addPoint.latitude, 5) + ", " + round(addPoint.longitude, 5);
                     addressNotFound = true;
                 } else {
                     addressLine.append(address.getLocality())
@@ -684,18 +682,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             .append(",")
                             .append(getString(R.string.blank_space))
                             .append(address.getFeatureName());
-                    //addressLine = address.getLocality() + ", " + address.getThoroughfare() + ", " + address.getFeatureName();
                     addressNotFound = false;
                 }
-                /*final String addressLine;
-                if (address.getLocality() == null || address.getThoroughfare() == null || address.getFeatureName() == null) {
-
-                    addressLine = round(addPoint.latitude, 5) + ", " + round(addPoint.longitude, 5);
-                    addressNotFound = true;
-                } else {
-                    addressLine = address.getLocality() + ", " + address.getThoroughfare() + ", " + address.getFeatureName();
-                    addressNotFound = false;
-                }*/
 
                 final Marker markerTouch = mMap.addMarker(new MarkerOptions()
                         .position(addPoint));
@@ -765,9 +753,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         builder.setMessage(message);//Html.fromHtml("<font color='#FF7F27'>"+getString(R.string.add)+"</font>")
         builder.setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(requireActivity(), PlaceActivity.class);
                 boolean fromMaps = true;
                 if (fromActivityPlace) {
+                    Intent intent = new Intent(requireActivity(), PlaceActivity.class);
                     Log.d("bundle", "fromActivityPlace");
                     intent.putExtra("fromMaps", fromMaps);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -780,20 +768,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                         intent.putExtra("latFromMaps", addPoint.latitude);
                         intent.putExtra("lngFromMaps", addPoint.longitude);
                     }
+                    // Не смог найти аналог startActivityForResult в JetPack
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();
                     markerdrop.remove();
                 } else {
-                    intent.putExtra("fromMaps", fromMaps);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("fromMaps", fromMaps);
                     if (address.getLocality() == null || address.getThoroughfare() == null) {
-                        intent.putExtra("latFromMaps", addPoint.latitude);
-                        intent.putExtra("lngFromMaps", addPoint.longitude);
+                        bundle.putDouble("latFromMaps", addPoint.latitude);
+                        bundle.putDouble("lngFromMaps", addPoint.longitude);
                     } else {
-                        intent.putExtra("addressFromMaps", addressLine.toString());
-                        intent.putExtra("latFromMaps", addPoint.latitude);
-                        intent.putExtra("lngFromMaps", addPoint.longitude);
+                        bundle.putString("addressFromMaps", addressLine.toString());
+                        bundle.putDouble("latFromMaps", addPoint.latitude);
+                        bundle.putDouble("lngFromMaps", addPoint.longitude);
                     }
-                    startActivity(intent);
+                    findNavController(MapFragment.this).navigate(R.id.action_map_to_placeActivity, bundle);
                     markerdrop.remove();
                 }
             }
@@ -819,10 +809,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         builder.setMessage(getString(R.string.continue_edit));
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(requireContext(), PlaceActivity.class);
-                intent.putExtra("id", pos);
-                intent.putExtra("fromMaps", true);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("fromMaps", true);
+                bundle.putLong("id", pos);
+                findNavController(MapFragment.this).navigate(R.id.action_map_to_placeActivity, bundle);
             }
         });
         builder.setNegativeButton(R.string.cancel, null);

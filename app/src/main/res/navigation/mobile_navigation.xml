@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/map"
         android:name="urum.geoplanner.ui.fragments.MapFragment"
-        android:label="MapFragment" />
+        android:label="MapFragment" >
+        <action
+            android:id="@+id/action_map_to_placeActivity"
+            app:destination="@id/placeActivity" />
+    </fragment>
     <fragment
         android:id="@+id/list_places"
         android:name="urum.geoplanner.ui.fragments.ListPlacesFragment"
@@ -16,6 +20,9 @@
         <action
             android:id="@+id/action_list_places_to_archive"
             app:destination="@id/archive" />
+        <action
+            android:id="@+id/action_list_places_to_placeActivity"
+            app:destination="@id/placeActivity" />
     </fragment>
 
     <fragment
@@ -25,5 +32,17 @@
     <fragment
         android:id="@+id/settings"
         android:name="urum.geoplanner.ui.fragments.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settings_to_logActivity"
+            app:destination="@id/logActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/logActivity"
+        android:name="urum.geoplanner.ui.LogActivity"
+        android:label="LogActivity" />
+    <activity
+        android:id="@+id/placeActivity"
+        android:name="urum.geoplanner.ui.PlaceActivity"
+        android:label="PlaceActivity" />
 </navigation>
