@@ -1,0 +1,114 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.preference.PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="service_category"
+        app:title="@string/service_header">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="switch"
+            app:title="@string/service_actice" />
+
+        <androidx.preference.ListPreference
+            app:defaultValue="0"
+            app:dependency="switch"
+            app:entries="@array/seconds_entries"
+            app:entryValues="@array/entry_seconds"
+            app:iconSpaceReserved="false"
+            app:key="listSeconds"
+            app:title="@string/service_update"
+            app:useSimpleSummaryProvider="true" />
+
+        <androidx.preference.ListPreference
+            app:defaultValue="0"
+            app:dependency="switch"
+            app:entries="@array/meters_entries"
+            app:entryValues="@array/entry_meters"
+            app:iconSpaceReserved="false"
+            app:key="listMeters"
+            app:title="@string/service_update_in_meters"
+            app:useSimpleSummaryProvider="true" />
+
+        <androidx.preference.CheckBoxPreference
+            android:defaultValue="true"
+            app:dependency="switch"
+            app:iconSpaceReserved="false"
+            app:key="checkBoxAutostart"
+            app:title="@string/service_autostart" />
+
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/archive_header">
+
+        <!--        <androidx.preference.DialogPreference
+                    app:dialogMessage="zxc"
+                    app:dialogTitle="123"
+                    app:key="dialog"
+                    app:negativeButtonText="Cancel"
+                    app:positiveButtonText="OK"
+                    app:title="Fun Thing" />-->
+
+        <urum.geoplanner.utils.UnArchiveAllDialogPreference
+            android:summary="Разархивировать все записи"
+            android:title="@string/archive_unarchive"
+            app:iconSpaceReserved="false" />
+        <urum.geoplanner.utils.ClearArchiveDialogPreference
+            android:summary="Удалить все записи из архива"
+            android:title="@string/archive_delete"
+            app:iconSpaceReserved="false" />
+
+        <!--        <intent android:action="android.settings.AIRPLANE_MODE_SETTINGS" />-->
+
+
+        <!--        <androidx.preference.SwitchPreferenceCompat-->
+        <!--            app:iconSpaceReserved="false"-->
+        <!--            app:key="attachment"-->
+        <!--            app:summaryOff="@string/attachment_summary_off"-->
+        <!--            app:summaryOn="@string/attachment_summary_on"-->
+        <!--            app:title="@string/attachment_title" />-->
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="settings_category"
+        app:title="@string/application">
+
+        <androidx.preference.PreferenceScreen
+            android:summary="Открыть лог срабатываний"
+            android:title="Журнал событий"
+            app:iconSpaceReserved="false">
+            <intent android:action="open.log.geoplanner" />
+        </androidx.preference.PreferenceScreen>
+
+        <androidx.preference.PreferenceScreen
+            android:summary="Открыть настройки приложения GeoPlanner"
+            android:title="Настройки приложения"
+            app:iconSpaceReserved="false">
+            <intent
+                android:action="android.settings.APPLICATION_DETAILS_SETTINGS"
+                android:data="package:urum.geoplanner" />
+        </androidx.preference.PreferenceScreen>
+
+        <androidx.preference.PreferenceScreen
+            android:summary="vk.com/dream0fme"
+            android:title="Ведущий разработчик"
+            app:iconSpaceReserved="false">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://vk.com/dream0fme" />
+        </androidx.preference.PreferenceScreen>
+
+        <!-- <PreferenceScreen
+             android:summary="Импортированная системная настройка"
+             android:title="Настройка через намерение"
+             app:iconSpaceReserved="false">
+             <intent android:action="android.settings.WIFI_SETTINGS"/>
+         </PreferenceScreen>-->
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

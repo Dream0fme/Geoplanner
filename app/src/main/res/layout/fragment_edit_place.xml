@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/activity_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_place"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            android:layout_marginStart="-6dp"
+            android:layout_marginTop="-6dp"
+            android:layout_marginEnd="-6dp"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+
+        <ScrollView
+            android:id="@+id/MainForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="25">
+
+            <RelativeLayout
+                android:id="@+id/linLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/nameBoxInput"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="25">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/nameBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#FFF"
+                        android:hint="Введите название места"
+                        android:maxLength="40"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addressBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nameBoxInput"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/googleMapBtn">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/address"
+                        style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:backgroundTint="#FFF"
+                        android:hint="Введите адрес"
+                        android:maxLength="120"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/googleMapBtn"
+                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/addressBox"
+                    android:layout_alignBottom="@+id/addressBox"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="5.65dp"
+                    android:layout_marginBottom="0.05dp"
+                    android:onClick="openGoogleMap"
+                    android:paddingLeft="12.4dp"
+                    app:icon="@drawable/ic_gps_place" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/radiusBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/addressBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/condition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#FFF"
+                        android:digits="0123456789"
+                        android:hint="Введите радиус (в метрах)"
+                        android:inputType="text|number|numberSigned"
+                        android:maxLength="10"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <CheckBox
+                    android:id="@+id/entering"
+                    style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/radiusBox"
+                    android:checked="true"
+                    android:text="При входе в зону"
+                    android:textSize="20sp"
+                    app:buttonTint="@color/myPeach" />
+
+                <RelativeLayout
+                    android:id="@+id/linLayoutEntering"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/entering"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        style="@android:style/Widget.Material.Spinner.Underlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:spinnerMode="dialog"
+                        app:backgroundTint="@color/myPeach"
+                        tools:ignore="NewApi" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txtInputLnumber"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/spinner"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/searchNubmerEnter">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="#FFF"
+                            android:digits="0123456789+*#"
+                            android:hint="Введите номер"
+                            android:inputType="phone"
+                            android:maxLength="35"
+                            android:singleLine="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/searchNubmerEnter"
+                        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/txtInputLnumber"
+                        android:layout_alignBottom="@+id/txtInputLnumber"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="5.65dp"
+                        android:layout_marginBottom="0.05dp"
+                        android:onClick="openContactsBookEnter"
+                        android:paddingStart="9.5dp"
+                        app:icon="@drawable/ic_contact" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txtInputLsms"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtInputLnumber"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="160"
+                        app:counterTextColor="@color/colorPrimary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editSMS"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="#FFF"
+                            android:hint="Введите сообщение"
+                            android:inputType="textMultiLine"
+                            android:maxLength="320"
+                            android:maxLines="9" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
+
+                <CheckBox
+                    android:id="@+id/exiting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linLayoutEntering"
+                    android:checked="true"
+                    android:text="При выходе из зоны"
+                    android:textSize="20sp"
+                    app:buttonTint="@color/myPeach" />
+
+                <RelativeLayout
+                    android:id="@+id/linLayoutExit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/exiting"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/spinnerExit"
+                        style="@android:style/Widget.Material.Spinner.Underlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:spinnerMode="dialog"
+                        app:backgroundTint="@color/myPeach"
+                        tools:ignore="NewApi" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutNum"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/spinnerExit"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/searchNubmerExit">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/numberExit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="#FFF"
+                            android:digits="0123456789+*#"
+                            android:hint="Введите номер"
+                            android:inputType="phone"
+                            android:maxLength="35"
+                            android:singleLine="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/searchNubmerExit"
+                        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/textInputLayoutNum"
+                        android:layout_alignBottom="@+id/textInputLayoutNum"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="5.65dp"
+                        android:layout_marginBottom="0.05dp"
+                        android:onClick="openContactsBookExit"
+                        android:paddingStart="9.5dp"
+                        app:icon="@drawable/ic_contact" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutSms"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textInputLayoutNum"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="160"
+                        app:counterTextColor="@color/colorPrimary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editSmsExit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="#FFF"
+                            android:hint="Введите сообщение"
+                            android:inputType="textMultiLine"
+                            android:maxLength="320"
+                            android:maxLines="9" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:onClick="save"
+                android:text="Сохранить"
+                android:textAllCaps="false"
+                android:textSize="18dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:onClick="delete"
+                android:text="Удалить"
+                android:textAllCaps="false"
+                android:textSize="18dp" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="56dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addressBoxGM"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/googleMapBtn"
+                tools:ignore="NestedWeights">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/autoCompleteTextView"
+                    style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="#FFF"
+                    android:maxLength="120"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/googleMapBtn"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/addressBoxGM"
+                android:layout_alignBottom="@+id/addressBoxGM"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="5.65dp"
+                android:layout_marginBottom="0.05dp"
+                android:onClick="onClick"
+                android:paddingLeft="6dp"
+                map:icon="@drawable/ic_search_white"
+                map:iconSize="40dp" />
+        </RelativeLayout>
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            map:cameraZoom="18"
+            map:uiCompass="true"
+            map:uiRotateGestures="true"
+            map:uiScrollGestures="true"
+            map:uiTiltGestures="true"
+            map:uiZoomControls="true"
+            map:uiZoomGestures="true"
+            />
+<!--        <fragment-->
+<!--            android:id="@+id/mapFragment"-->
+<!--            android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="20"-->
+<!--            map:cameraZoom="18"-->
+<!--            map:uiCompass="true"-->
+<!--            map:uiRotateGestures="true"-->
+<!--            map:uiScrollGestures="true"-->
+<!--            map:uiTiltGestures="true"-->
+<!--            map:uiZoomControls="true"-->
+<!--            map:uiZoomGestures="true"-->
+<!--            />-->
+    </LinearLayout>
+</layout>

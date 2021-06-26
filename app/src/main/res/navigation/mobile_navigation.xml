@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/list_places">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="urum.geoplanner.ui.fragments.MapFragment"
+        android:label="MapFragment" />
+    <fragment
+        android:id="@+id/list_places"
+        android:name="urum.geoplanner.ui.fragments.ListPlacesFragment"
+        android:label="ListPlacesFragment" >
+        <action
+            android:id="@+id/action_list_places_to_archive"
+            app:destination="@id/archive" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/archive"
+        android:name="urum.geoplanner.ui.fragments.ArchivePlacesFragment"
+        android:label="ArchivePlacesFragment" />
+    <fragment
+        android:id="@+id/settings"
+        android:name="urum.geoplanner.ui.fragments.SettingsFragment"
+        android:label="SettingsFragment" />
+</navigation>

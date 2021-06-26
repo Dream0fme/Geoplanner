@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="place"
+            type="urum.geoplanner.db.entities.PlaceLog" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="#FFFFFF">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/titleTextLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/dataTextLog"
+            android:text="@{place.name}"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dataTextLog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_alignBottom="@+id/titleTextLog"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:text="@{place.date}"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/addressTextLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleTextLog"
+            android:layout_alignParentStart="true"
+            android:text="@{@string/addresslog + @string/blank_space + place.address}"
+            android:textAppearance="?android:textAppearanceMedium" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/radiusTextLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addressTextLog"
+            android:text='@{@string/radius + @string/blank_space + Integer.toString(place.condition) + " м."}'
+            android:textAppearance="?android:textAppearanceMedium" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/enterTextLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/radiusTextLog"
+            android:layout_alignParentStart="true"
+            android:text="@{place.sms}"
+            android:textAppearance="?android:textAppearanceMedium" />
+
+        <!-- <com.google.android.material.textview.MaterialTextView
+             android:id="@+id/exitTextLog"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@id/enterTextLog"
+             android:textAppearance="?android:textAppearanceMedium" />-->
+    </RelativeLayout>
+</layout>

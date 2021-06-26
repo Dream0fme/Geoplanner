@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:color="@color/myRed"
+    tools:ignore="NewApi">
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <corners android:radius="4dp" />
+            <solid android:color="@color/myPeach" />
+        </shape>
+    </item>
+</ripple>
+

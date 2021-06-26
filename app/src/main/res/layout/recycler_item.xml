@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="androidx.core.text.HtmlCompat"/>
+        <import type="android.view.View"/>
+
+        <variable
+            name="place"
+            type="urum.geoplanner.db.entities.Place" />
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:strokeColor="@color/cardview_shadow_start_color"
+        app:strokeWidth="0dp">
+
+        <RelativeLayout
+            android:id="@+id/relativeCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tittleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/switch_btn"
+                android:text="@{place.name}"
+                android:textAppearance="?android:textAppearanceLarge" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_alignBottom="@+id/txtOptionDigit"
+                android:layout_marginEnd="10dp"
+                android:checked="@{place.activation == 1 ? true : false}"
+                android:layout_toStartOf="@+id/txtOptionDigit" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/addressText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tittleText"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/editMode"
+                android:text="@{HtmlCompat.fromHtml(@string/address + @string/blank_space + place.address,HtmlCompat.FROM_HTML_MODE_LEGACY)}"
+                android:textAppearance="?android:textAppearanceMedium"
+                />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/radiusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addressText"
+                app:textRadius="@{@string/radius + @string/blank_space}"
+                app:condition="@{place.condition}"
+                app:checkBoxEnter="@{place.checkboxEnter}"
+                app:checkBoxExit="@{place.checkboxExit}"
+                android:textAppearance="?android:textAppearanceMedium" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/enterText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/radiusText"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/editMode"
+                android:visibility="@{place.checkboxEnter == 1 ? View.VISIBLE : View.GONE}"
+                app:entry="@{@string/entryUp}"
+                app:number="@{place.number}"
+                app:sms="@{place.sms}"
+                app:pos="@{place.position}"
+                android:textAppearance="?android:textAppearanceMedium" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/exitText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/enterText"
+                android:visibility="@{place.checkboxExit == 1 ? View.VISIBLE : View.GONE}"
+                app:entry="@{@string/exitUp}"
+                app:number="@{place.number}"
+                app:sms="@{place.sms}"
+                app:pos="@{place.position}"
+                android:textAppearance="?android:textAppearanceMedium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/txtOptionDigit"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="34dp"
+                android:layout_height="44dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                app:cornerRadius="34dp"
+                app:icon="@drawable/ic_more_vert_24px"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="24dp"
+                app:iconTint="@android:color/black" />
+            <!--<ImageButton
+                android:id="@+id/txtOptionDigit"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:src="@drawable/ic_more_vert_24px" />-->
+
+            <!--<ImageButton
+                android:id="@+id/editMode"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="-10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_edit_mode"
+                android:visibility="invisible"-->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editMode"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="-10dp"
+                android:visibility="invisible"
+                app:icon="@drawable/ic_edit_mode"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="30dp"
+                app:iconTint="@android:color/black" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
+
+

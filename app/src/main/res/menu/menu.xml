@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <item
+        android:id="@+id/buttonComplete"
+        android:icon="@drawable/ic_check_24px"
+        android:title="Готово"
+        app:showAsAction="always|withText"
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/menuSearch"
+        android:icon="@drawable/ic_action_name"
+        android:orderInCategory="100"
+        android:title="Поиск"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menuEditing"
+        android:icon="@drawable/ic_edit_mod"
+        android:title="Редактирование" />
+
+    <item
+        android:id="@+id/menuArchive"
+        android:icon="@drawable/ic_archive_24px"
+        android:title="Архив" />
+
+
+</menu>
