@@ -36,7 +36,7 @@
             android:key="geo_accuracy"
             app:dependency="switchService"
             app:iconSpaceReserved="false"
-            android:title="Предел точности геолокации в метрах"
+            app:title="@string/geo_accuracy_in_meters"
             android:max="100"
             app:min="30"
             app:adjustable="true"
@@ -90,12 +90,12 @@
         </androidx.preference.PreferenceScreen>
 
         <androidx.preference.PreferenceScreen
-            android:summary="vk.com/dream0fme"
+            android:summary="https://t.me/dream_0f_me"
             android:title="Ведущий разработчик"
             app:iconSpaceReserved="false">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://vk.com/dream0fme" />
+                android:data="https://t.me/dream_0f_me" />
         </androidx.preference.PreferenceScreen>
 
         <!-- <PreferenceScreen
