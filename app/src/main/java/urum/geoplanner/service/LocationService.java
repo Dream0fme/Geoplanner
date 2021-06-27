@@ -32,8 +32,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -52,7 +50,7 @@ import static urum.geoplanner.utils.Constants.*;
 
 
 
-public class LocationService extends LifecycleService implements OnCompleteListener<Void>, SharedPreferences.OnSharedPreferenceChangeListener {
+public class LocationService extends LifecycleService implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
 
@@ -521,11 +519,6 @@ public class LocationService extends LifecycleService implements OnCompleteListe
         public LocationService getService() {
             return LocationService.this;
         }
-    }
-
-    @Override
-    public void onComplete(@NonNull Task<Void> task) {
-
     }
 
     private Notification getNotification() {
