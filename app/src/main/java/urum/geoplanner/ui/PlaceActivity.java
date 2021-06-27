@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 import urum.geoplanner.R;
 import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.service.ConnectorService;
+import urum.geoplanner.utils.GeocoderAdapter;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
@@ -176,7 +177,7 @@ public class PlaceActivity extends AppCompatActivity {
         nameBox = findViewById(R.id.nameBox);
         addressBox = findViewById(R.id.address);
         addressBox.setThreshold(1);
-        //addressBox.setAdapter(new CustomAdapter(this, android.R.layout.simple_list_item_1));
+        addressBox.setAdapter(new GeocoderAdapter(this, android.R.layout.simple_list_item_1));
         number = findViewById(R.id.number);
         sms = findViewById(R.id.editSMS);
         conditionBox = findViewById(R.id.condition);

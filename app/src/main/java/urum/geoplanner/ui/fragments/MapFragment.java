@@ -56,6 +56,7 @@ import urum.geoplanner.databinding.FragmentMapBinding;
 import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.ui.MainActivity;
 import urum.geoplanner.ui.PlaceActivity;
+import urum.geoplanner.utils.GeocoderAdapter;
 import urum.geoplanner.utils.NetworkChecker;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
@@ -72,6 +73,7 @@ import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
 import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Utils.enableLayout;
 import static urum.geoplanner.utils.Utils.findNavController;
+import static urum.geoplanner.utils.Utils.getLastLocation;
 import static urum.geoplanner.utils.Utils.round;
 
 
@@ -154,7 +156,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         binding.addressBoxGM.setHint(null);
         binding.autoCompleteTextView.setHint(getString(R.string.input_address));
         binding.autoCompleteTextView.setThreshold(1);
-        //binding.autoCompleteTextView.setAdapter(new CustomAdapter(this, android.R.layout.simple_list_item_1));
+        binding.autoCompleteTextView.setAdapter(new GeocoderAdapter(requireActivity(), android.R.layout.simple_list_item_1));
 
         try {
             mapView = binding.mapView;
@@ -248,37 +250,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         if (fromActivityPlace & (lat != 0.0 & lng != 0.0)) {
             LatLng myLocation = new LatLng(lat, lng);
             //mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-            //mMap.animateCamera(CameraUpdateFactory.newLatLng(myLocation));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
         } else {
-            try {
-                boolean isGPSEnabled = false;
-                boolean isNetworkEnabled = false;
-
-                if (lm != null) {
-                    isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                    isNetworkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-                }
-                Log.d(TAG, "GPS: " + isGPSEnabled + ", NETWORK: " + isNetworkEnabled);
-                if (isGPSEnabled || isNetworkEnabled) {
-                    Location l;
-                    if (isGPSEnabled) {
-                        l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    } else {
-                        l = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    }
-                    if (l != null) {
-                        LatLng myLocation = new LatLng(l.getLatitude(), l.getLongitude());
-                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-                        //mMap.animateCamera(CameraUpdateFactory.newLatLng(myLocation));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
-                    }
-                } else {
-                    Toast.makeText(requireContext(), "GPS/NETWORK выключен", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            LatLng myLocation = getLastLocation(requireActivity());
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
         }
         //mMap.setOnMapLongClickListener(this);
     }
