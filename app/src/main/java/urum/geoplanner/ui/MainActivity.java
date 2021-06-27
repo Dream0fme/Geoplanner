@@ -128,19 +128,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         params = (CoordinatorLayout.LayoutParams)
                 binding.navHostFragment.getLayoutParams();
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            Log.d("bundle", "Main");
-            bundle = new Bundle();
-            bundle.putBoolean("fromActivityPlace", extras.getBoolean("fromActivityPlace"));
-            bundle.putDouble("lat", extras.getDouble("lat"));
-            bundle.putDouble("lng", extras.getDouble("lng"));
-            navController.navigate(R.id.map, bundle);
-            if (extras.getBoolean("FROM_NOTIFICATION")) {
-                navController.navigate(R.id.settings);
-            }
-        }
-
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @SuppressLint("RestrictedApi")
             @Override
@@ -193,6 +180,23 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         startService(new Intent(MainActivity.this, LocationService.class));
                     }
                 });
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.getBoolean("FROM_NOTIFICATION_TO_SETTINGS")) {
+                Log.d("bundle", "FROM_NOTIFICATION_TO_SETTINGS");
+                navController.navigate(R.id.settings);
+            }
+
+            if (extras.getBoolean("fromActivityPlace")) {
+                Log.d("bundle", "fromActivityPlace");
+                bundle = new Bundle();
+                bundle.putBoolean("fromActivityPlace", extras.getBoolean("fromActivityPlace"));
+                bundle.putDouble("lat", extras.getDouble("lat"));
+                bundle.putDouble("lng", extras.getDouble("lng"));
+                navController.navigate(R.id.map, bundle);
+            }
+        }
     }
 
 

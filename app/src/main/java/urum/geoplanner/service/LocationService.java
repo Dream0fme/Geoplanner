@@ -544,15 +544,17 @@ public class LocationService extends LifecycleService implements OnCompleteListe
     private Notification getNotification() {
         Intent intent = new Intent(this, LocationService.class);
         intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
+
         PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+                FLAG_UPDATE_CURRENT);
+
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 1,
+                new Intent(this, MainActivity.class), FLAG_UPDATE_CURRENT);
 
         Intent openSettings = new Intent(this, MainActivity.class);
-        openSettings.putExtra("FROM_NOTIFICATION", true);
+        openSettings.putExtra("FROM_NOTIFICATION_TO_SETTINGS", true);
 
-        PendingIntent settingsPending = PendingIntent.getActivity(this, 0,
+        PendingIntent settingsPending = PendingIntent.getActivity(this, 3,
                 openSettings, FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)

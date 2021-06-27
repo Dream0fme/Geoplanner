@@ -268,13 +268,13 @@ public class ActionManager {
         Intent intent = new Intent(context, MainActivity.class);
         Intent editPlace = new Intent(context, PlaceActivity.class);
         editPlace.putExtra("id_notification", (long) id);
-        editPlace.putExtra("FROM_NOTIFICATION", true);
+        editPlace.putExtra("FROM_NOTIFICATION_TO_PLACEACTIVITY", true);
 
         PendingIntent editIntent = PendingIntent.getActivity(context, 0,
-                editPlace, 0);
+                editPlace, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 0,
-                intent, 0);
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.setBigContentTitle(enter);

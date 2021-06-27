@@ -375,7 +375,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if(extras.getBoolean("FROM_NOTIFICATION")){
+            if(extras.getBoolean("FROM_NOTIFICATION_TO_PLACEACTIVITY")){
                 placeId = extras.getLong("id_notification", 0);
             } else placeId = extras.getLong("id");
 
