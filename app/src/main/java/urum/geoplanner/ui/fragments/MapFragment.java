@@ -64,12 +64,13 @@ import static android.content.Context.LOCATION_SERVICE;
 import static urum.geoplanner.utils.Utils.enableLayout;
 import static urum.geoplanner.utils.Utils.findNavController;
 import static urum.geoplanner.utils.Utils.round;
+import static urum.geoplanner.utils.Constants.*;
+
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMyLocationClickListener, View.OnClickListener {
 
     FragmentMapBinding binding;
-    private static final String TAG = "mytag";
     boolean addressNotFound;
 
     private boolean fromActivityPlace = false;
@@ -185,7 +186,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             int radius = places.get(i).getCondition();
 
                             StringBuilder infoMarker = createInfoMarker(places, i);
-                            Log.d("mytag", infoMarker.toString());
                             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                                 @Override
                                 public View getInfoWindow(Marker arg0) {
@@ -756,17 +756,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 boolean fromMaps = true;
                 if (fromActivityPlace) {
                     Intent intent = new Intent(requireActivity(), PlaceActivity.class);
-                    Log.d("bundle", "fromActivityPlace");
-                    intent.putExtra("fromMaps", fromMaps);
+                    intent.putExtra(FROM_MAPS, fromMaps);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     if (address.getLocality() == null || address.getThoroughfare() == null) {
-                        intent.putExtra("addressFromMaps", "");
-                        intent.putExtra("latFromMaps", addPoint.latitude);
-                        intent.putExtra("lngFromMaps", addPoint.longitude);
+                        intent.putExtra(ADDRESS_FROM_MAPS, "");
+                        intent.putExtra(LATITUDE_FROM_MAPS, addPoint.latitude);
+                        intent.putExtra(LONGITUDE_FROM_MAPS, addPoint.longitude);
                     } else {
-                        intent.putExtra("addressFromMaps", addressLine.toString());
-                        intent.putExtra("latFromMaps", addPoint.latitude);
-                        intent.putExtra("lngFromMaps", addPoint.longitude);
+                        intent.putExtra(ADDRESS_FROM_MAPS, addressLine.toString());
+                        intent.putExtra(LATITUDE_FROM_MAPS, addPoint.latitude);
+                        intent.putExtra(LONGITUDE_FROM_MAPS, addPoint.longitude);
                     }
                     // Не смог найти аналог startActivityForResult в JetPack
                     getActivity().setResult(Activity.RESULT_OK, intent);
@@ -774,14 +773,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     markerdrop.remove();
                 } else {
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean("fromMaps", fromMaps);
+                    bundle.putBoolean(FROM_MAPS, fromMaps);
                     if (address.getLocality() == null || address.getThoroughfare() == null) {
-                        bundle.putDouble("latFromMaps", addPoint.latitude);
-                        bundle.putDouble("lngFromMaps", addPoint.longitude);
+                        bundle.putDouble(LATITUDE_FROM_MAPS, addPoint.latitude);
+                        bundle.putDouble(LONGITUDE_FROM_MAPS, addPoint.longitude);
                     } else {
-                        bundle.putString("addressFromMaps", addressLine.toString());
-                        bundle.putDouble("latFromMaps", addPoint.latitude);
-                        bundle.putDouble("lngFromMaps", addPoint.longitude);
+                        bundle.putString(ADDRESS_FROM_MAPS, addressLine.toString());
+                        bundle.putDouble(LATITUDE_FROM_MAPS, addPoint.latitude);
+                        bundle.putDouble(LONGITUDE_FROM_MAPS, addPoint.longitude);
                     }
                     findNavController(MapFragment.this).navigate(R.id.action_map_to_placeActivity, bundle);
                     markerdrop.remove();
@@ -810,8 +809,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("fromMaps", true);
-                bundle.putLong("id", pos);
+                bundle.putBoolean(FROM_MAPS, true);
+                bundle.putLong(ID, pos);
                 findNavController(MapFragment.this).navigate(R.id.action_map_to_placeActivity, bundle);
             }
         });
@@ -834,10 +833,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         Bundle extras = getArguments();
         if (extras != null) {
-            Log.d("bundle", "MapFragment");
-            fromActivityPlace = extras.getBoolean("fromActivityPlace");
-            lat = extras.getDouble("lat");
-            lng = extras.getDouble("lng");
+            fromActivityPlace = extras.getBoolean(FROM_ACTIVITY_PLACE);
+            lat = extras.getDouble(LATITUDE_FROM_PLACEACTIVITY);
+            lng = extras.getDouble(LONGITUDE_FROM_PLACEACTIVITY);
         }
 
         if (!NetworkChecker.isNetworkAvailable(requireContext())) {

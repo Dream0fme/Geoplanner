@@ -66,16 +66,14 @@ import urum.geoplanner.service.LocationService;
 import urum.geoplanner.utils.BootReceiver;
 
 import static urum.geoplanner.utils.Utils.enableLayout;
+import static urum.geoplanner.utils.Constants.*;
 
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, EasyPermissions.PermissionCallbacks {
 
-    private static final String TAG = "mytag";
-    private static final int LOCATION = 10;
     private String PACKAGE_NAME;
-
 
     public ActivityMainBinding binding;
     MaterialToolbar mToolbar;
@@ -93,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private GoogleApiClient googleApiClient;
     private LocationRequest mLocationRequest;
-    private static final int REQUEST_CHECK_SETTINGS = 110;
     Bundle bundle;
 
     @SuppressLint("RestrictedApi")
@@ -103,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         PACKAGE_NAME = this.getPackageName();
-        registerReceiver(CloseReceiver, new IntentFilter("closeApp"));
+        registerReceiver(CloseReceiver, new IntentFilter(CLOSEAPPINTENTFILTER));
         initToolbar();
         binding.setLifecycleOwner(this);
 
@@ -183,17 +180,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.getBoolean("FROM_NOTIFICATION_TO_SETTINGS")) {
-                Log.d("bundle", "FROM_NOTIFICATION_TO_SETTINGS");
+            if (extras.getBoolean(FROM_NOTIFICATION_TO_SETTINGS)) {
+                Log.d("bundle", FROM_NOTIFICATION_TO_SETTINGS);
                 navController.navigate(R.id.settings);
             }
 
-            if (extras.getBoolean("fromActivityPlace")) {
+            if (extras.getBoolean(FROM_ACTIVITY_PLACE)) {
                 Log.d("bundle", "fromActivityPlace");
                 bundle = new Bundle();
-                bundle.putBoolean("fromActivityPlace", extras.getBoolean("fromActivityPlace"));
-                bundle.putDouble("lat", extras.getDouble("lat"));
-                bundle.putDouble("lng", extras.getDouble("lng"));
+                bundle.putBoolean(FROM_ACTIVITY_PLACE, extras.getBoolean(FROM_ACTIVITY_PLACE));
+                bundle.putDouble(LATITUDE_FROM_PLACEACTIVITY, extras.getDouble(LATITUDE_FROM_PLACEACTIVITY));
+                bundle.putDouble(LONGITUDE_FROM_PLACEACTIVITY, extras.getDouble(LONGITUDE_FROM_PLACEACTIVITY));
                 navController.navigate(R.id.map, bundle);
             }
         }
@@ -378,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    @AfterPermissionGranted(LOCATION)
+    @AfterPermissionGranted(LOCATION_PERMISSIONS)
     private void requiresLocationPermission() {
         List<String> permsList = new ArrayList<String>() {{
             add(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -392,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             enableLayout(binding.container, true);
         } else {
             EasyPermissions.requestPermissions(
-                    new PermissionRequest.Builder(this, LOCATION, perms)
+                    new PermissionRequest.Builder(this, LOCATION_PERMISSIONS, perms)
                             .setRationale(R.string.permission_rationale)
                             .setPositiveButtonText(R.string.start)
                             .build());
@@ -431,11 +428,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                                     ActivityCompat.requestPermissions(MainActivity.this,
                                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                                                     Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                                            LOCATION);
+                                            LOCATION_PERMISSIONS);
                                 } else {
                                     ActivityCompat.requestPermissions(MainActivity.this,
                                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                            LOCATION);
+                                            LOCATION_PERMISSIONS);
                                 }
                             }
                         }).setAnchorView(binding.fabButton)

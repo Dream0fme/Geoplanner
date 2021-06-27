@@ -57,10 +57,10 @@ import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static urum.geoplanner.utils.Utils.round;
+import static urum.geoplanner.utils.Constants.*;
 
 @SuppressLint("NewApi")
 public class PlaceActivity extends AppCompatActivity {
-    private static final String TAG = "mytag";
     private String PACKAGE_NAME;
     Geocoder geocoder;
     List<Address> addresses;
@@ -88,7 +88,7 @@ public class PlaceActivity extends AppCompatActivity {
     String addressFromMaps = "";
     NotificationManager mNotificationManager;
     String addressFromDB = "";
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+
     int posEnter = -1;
     int posExit = -1;
     Snackbar snackbarDND;
@@ -99,8 +99,6 @@ public class PlaceActivity extends AppCompatActivity {
     private ConnectorService connectorService;
 
     private PlaceViewModel mPlaceViewModel;
-
-
 
 
     @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
@@ -142,7 +140,7 @@ public class PlaceActivity extends AppCompatActivity {
         mPlaceViewModel = new ViewModelProvider(this,
                 new ModelFactory(getApplication())).get(PlaceViewModel.class);
 
-        registerReceiver(CloseReceiver, new IntentFilter("closeApp"));
+        registerReceiver(CloseReceiver, new IntentFilter(CLOSEAPPINTENTFILTER));
         mNotificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         linearLayout = findViewById(R.id.linLayout);
         btnGoogleMap = findViewById(R.id.googleMapBtn);
@@ -375,13 +373,13 @@ public class PlaceActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if(extras.getBoolean("FROM_NOTIFICATION_TO_PLACEACTIVITY")){
-                placeId = extras.getLong("id_notification", 0);
-            } else placeId = extras.getLong("id");
+            if(extras.getBoolean(FROM_NOTIFICATION_TO_PLACEACTIVITY)){
+                placeId = extras.getLong(ID_FROM_NOTIFICATION, 0);
+            } else placeId = extras.getLong(ID);
 
-            fromMaps = extras.getBoolean("fromMaps");
-            addressFromMaps = extras.getString("addressFromMaps", "");
-            fromMain = extras.getBoolean("fromMain");
+            fromMaps = extras.getBoolean(FROM_MAPS);
+            addressFromMaps = extras.getString(ADDRESS_FROM_MAPS, "");
+            fromMain = extras.getBoolean(FROM_MAIN);
         }
 
         if (placeId > 0) { // если 0, то добавление
@@ -776,7 +774,7 @@ public class PlaceActivity extends AppCompatActivity {
     public void openGoogleMap(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("fromActivityPlace", true);
+        intent.putExtra(FROM_ACTIVITY_PLACE, true);
         Pattern patternGEO = Pattern.compile("^(\\-?\\d+(\\.\\d+)?),\\s*(\\-?\\d+(\\.\\d+)?)$");
         Matcher geoMatcher = patternGEO.matcher(addressBox.getText().toString());
         if (!addressBox.getText().toString().equals("") && !addressFromDB.equalsIgnoreCase(addressBox.getText().toString()) && !geoMatcher.matches()) {
@@ -801,8 +799,8 @@ public class PlaceActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    intent.putExtra("lat", address.getLatitude());
-                    intent.putExtra("lng", address.getLongitude());
+                    intent.putExtra(LATITUDE_FROM_PLACEACTIVITY, address.getLatitude());
+                    intent.putExtra(LONGITUDE_FROM_PLACEACTIVITY, address.getLongitude());
                     startActivityForResult(intent, 1);
                 }
             } catch (IOException ioException) {
@@ -814,8 +812,8 @@ public class PlaceActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Используется неверная широта или долгота", Toast.LENGTH_LONG).show();
             }
         } else {
-            intent.putExtra("lat", lat);
-            intent.putExtra("lng", lng);
+            intent.putExtra(LATITUDE_FROM_PLACEACTIVITY, lat);
+            intent.putExtra(LONGITUDE_FROM_PLACEACTIVITY, lng);
             startActivityForResult(intent, 1);
         }
     }
@@ -843,26 +841,24 @@ public class PlaceActivity extends AppCompatActivity {
         }
         switch (requestCode) {
             case 1:
-                fromMaps = i.getBooleanExtra("fromMaps", false);
-                addressFromMaps = i.getStringExtra("addressFromMaps");
+                fromMaps = i.getBooleanExtra(FROM_MAPS, false);
+                addressFromMaps = i.getStringExtra(ADDRESS_FROM_MAPS);
                 Log.d(TAG, addressFromMaps);
                 if (fromMaps) {
                     if (addressFromMaps.equals("")) {
                         //linearLayout.removeView(addressLayout);
                         //linearLayout.removeView(btnGoogleMap);
                         //((RelativeLayout.LayoutParams) radiusBox.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.nameBoxInput);
-                        lat = i.getDoubleExtra("latFromMaps", 0.0);
-                        lng = i.getDoubleExtra("lngFromMaps", 0.0);
+                        lat = i.getDoubleExtra(LATITUDE_FROM_MAPS, 0.0);
+                        lng = i.getDoubleExtra(LONGITUDE_FROM_MAPS, 0.0);
                         addressBox.setText(round(lat, 5) + ", " + round(lng, 5));
                         if (addressBox.isEnabled()) {
                             addressBox.setEnabled(false);
                         }
                     } else {
                         addressBox.setText(addressFromMaps);
-                        Log.i(TAG, addressFromMaps);
-                        Log.i(TAG, "lat" + lat + " lng: " + lng);
-                        lat = i.getDoubleExtra("latFromMaps", 0.0);
-                        lng = i.getDoubleExtra("lngFromMaps", 0.0);
+                        lat = i.getDoubleExtra(LATITUDE_FROM_MAPS, 0.0);
+                        lng = i.getDoubleExtra(LONGITUDE_FROM_MAPS, 0.0);
                         if (!addressBox.isEnabled()) {
                             addressBox.setEnabled(true);
                         }
@@ -1064,7 +1060,6 @@ public class PlaceActivity extends AppCompatActivity {
                                 new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS},
                                 REQUEST_PERMISSIONS_REQUEST_CODE);
                     }
-
                 }
                 break;
             case 3:

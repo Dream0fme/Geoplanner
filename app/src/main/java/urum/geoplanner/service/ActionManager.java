@@ -38,15 +38,13 @@ import urum.geoplanner.viewmodel.PlaceViewModel;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
 
+import static urum.geoplanner.utils.Constants.*;
+
+
 @SuppressWarnings("MissingPermission")
 public class ActionManager {
 
     ReceiverManager receiverManager;
-    String SENT_SMS_FLAG = "SENT_SMS";
-    String DELIVER_SMS_FLAG = "DELIVER_SMS";
-    private static final String TAG = "mytag";
-    private static final String CHANNEL_ID = "channel_";
-
     private Context context;
 
     @SuppressLint("StaticFieldLeak")
@@ -68,8 +66,8 @@ public class ActionManager {
 
         @Override
         public void onReceive(Context c, Intent in) {
-            String number = in.getStringExtra("numberDeliver");
-            String sms = in.getStringExtra("smsDeliver");
+            String number = in.getStringExtra(NUMBER_DELIVER);
+            String sms = in.getStringExtra(SMS_DELIVER);
             NotificationManager mNotificationManager = (NotificationManager) c.getSystemService(NOTIFICATION_SERVICE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -119,7 +117,7 @@ public class ActionManager {
             PendingIntent actionPendingIntent;
             if (result.equals("")) {
                 action = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + number));
-                action.putExtra("sms_body", sms);
+                action.putExtra(SMS_BODY, sms);
                 action.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 actionPendingIntent = PendingIntent.getActivity(context, 0,
                         action, 0);
@@ -149,8 +147,8 @@ public class ActionManager {
 
         @Override
         public void onReceive(Context c, Intent in) {
-            String number = in.getStringExtra("numberSent");
-            String sms = in.getStringExtra("smsSent");
+            String number = in.getStringExtra(NUMBER_SENT);
+            String sms = in.getStringExtra(SMS_SENT);
             NotificationManager mNotificationManager = (NotificationManager) c.getSystemService(NOTIFICATION_SERVICE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -199,7 +197,7 @@ public class ActionManager {
             PendingIntent actionPendingIntent;
             if (result.equals("")) {
                 action = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + number));
-                action.putExtra("sms_body", sms);
+                action.putExtra(SMS_BODY, sms);
                 action.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 actionPendingIntent = PendingIntent.getActivity(context, 0,
                         action, 0);
@@ -267,8 +265,8 @@ public class ActionManager {
 
         Intent intent = new Intent(context, MainActivity.class);
         Intent editPlace = new Intent(context, PlaceActivity.class);
-        editPlace.putExtra("id_notification", (long) id);
-        editPlace.putExtra("FROM_NOTIFICATION_TO_PLACEACTIVITY", true);
+        editPlace.putExtra(ID_FROM_NOTIFICATION, (long) id);
+        editPlace.putExtra(FROM_NOTIFICATION_TO_PLACEACTIVITY, true);
 
         PendingIntent editIntent = PendingIntent.getActivity(context, 0,
                 editPlace, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -354,15 +352,15 @@ public class ActionManager {
     public void sendToSms(String number, String sms) {
         Intent sentIn = new Intent(SENT_SMS_FLAG);
         sentIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        sentIn.putExtra("numberSent", number);
-        sentIn.putExtra("smsSent", sms);
+        sentIn.putExtra(NUMBER_SENT, number);
+        sentIn.putExtra(SMS_SENT, sms);
         final PendingIntent sentPIn = PendingIntent.getBroadcast(context, 0,
                 sentIn, 0);
 
         Intent deliverIn = new Intent(DELIVER_SMS_FLAG);
         deliverIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        deliverIn.putExtra("numberDeliver", number);
-        deliverIn.putExtra("smsDeliver", sms);
+        deliverIn.putExtra(NUMBER_DELIVER, number);
+        deliverIn.putExtra(SMS_DELIVER, sms);
         final PendingIntent deliverPIn = PendingIntent.getBroadcast(context, 0,
                 deliverIn, 0);
         SmsManager smsManager = SmsManager.getDefault();

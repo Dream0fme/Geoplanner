@@ -45,20 +45,18 @@ import java.util.Map;
 import urum.geoplanner.R;
 import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.ui.MainActivity;
+import urum.geoplanner.utils.Constants;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static urum.geoplanner.utils.Constants.*;
+
 
 public class LocationService extends LifecycleService implements OnCompleteListener<Void>, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String PACKAGE_NAME = "urum.geoplanner";
-    private static final String TAG = "mytag";
-    private static final String CHANNEL_ID = "channel_";
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
 
     private final IBinder mBinder = new LocalBinder();
-
-    private static final int NOTIFICATION_ID = 10;
 
     private boolean mChangingConfiguration = false;
 
@@ -68,6 +66,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
 
     int valueSeconds;
     float valuseMeters;
+
     private static final int UPDATE_INTERVAL_3_SEC = 6000;
     private static final int UPDATE_INTERVAL_5_SEC = 10000;
     private static final int UPDATE_INTERVAL_10_SEC = 20000;
@@ -93,16 +92,6 @@ public class LocationService extends LifecycleService implements OnCompleteListe
     // Сессионый справочник вхождений в области
     private Map<Integer, Boolean> inProximity = new HashMap<>();
 
-    private final Map<Integer, String> channel = new HashMap<Integer, String>() {{
-        put(0, "Уведомление о звонке");
-        put(1, "Уведомление об отправке SMS");
-        put(2, "Уведомление");
-        put(3, "Уведомление о включении режима 'Не беспокоить'");
-        put(4, "Уведомление о выключении режима 'Не беспокоить'");
-        put(5, "Уведомление о включении Wi-Fi");
-        put(6, "Уведомление о выключении Wi-Fi");
-    }};
-
     private ActionManager actionManager;
 
     @Override
@@ -127,7 +116,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Сервис " + getString(R.string.app_name);
             NotificationChannel mChannel =
-                    new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_MIN);
+                    new NotificationChannel(CHANNEL_ID + getString(R.string.app_name), name, NotificationManager.IMPORTANCE_MIN);
             mChannel.setShowBadge(true);
             mChannel.enableVibration(false);
             // mChannel.setAllowBubbles(false);
@@ -552,7 +541,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
                 new Intent(this, MainActivity.class), FLAG_UPDATE_CURRENT);
 
         Intent openSettings = new Intent(this, MainActivity.class);
-        openSettings.putExtra("FROM_NOTIFICATION_TO_SETTINGS", true);
+        openSettings.putExtra(FROM_NOTIFICATION_TO_SETTINGS, true);
 
         PendingIntent settingsPending = PendingIntent.getActivity(this, 3,
                 openSettings, FLAG_UPDATE_CURRENT);
@@ -579,7 +568,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId(CHANNEL_ID);
+            builder.setChannelId(CHANNEL_ID + getString(R.string.app_name));
         }
         return builder.build();
     }

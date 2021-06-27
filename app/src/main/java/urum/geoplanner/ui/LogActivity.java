@@ -42,11 +42,14 @@ import urum.geoplanner.service.ConnectorService;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
+import static urum.geoplanner.utils.Constants.CLOSEAPPINTENTFILTER;
+import static urum.geoplanner.utils.Constants.*;
+
+
 @SuppressLint("RestrictedApi")
 public class LogActivity extends AppCompatActivity {
 
     ActivityLogBinding binding;
-    private static final String TAG = "mytag";
     Menu menu;
 
     PlaceViewModel mPlaceViewModel;
@@ -58,8 +61,7 @@ public class LogActivity extends AppCompatActivity {
         binding = ActivityLogBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initToolbar();
-
-        registerReceiver(CloseReceiver, new IntentFilter("closeApp"));
+        registerReceiver(CloseReceiver, new IntentFilter(CLOSEAPPINTENTFILTER));
 
         ConnectorService connectorService = new ConnectorService(this);
         getLifecycle().addObserver(connectorService);
