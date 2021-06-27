@@ -45,11 +45,11 @@ import java.util.Map;
 import urum.geoplanner.R;
 import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.ui.MainActivity;
-import urum.geoplanner.utils.Constants;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static urum.geoplanner.utils.Constants.*;
+
 
 
 public class LocationService extends LifecycleService implements OnCompleteListener<Void>, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -74,6 +74,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
     private static final float UPDATE_DISTANCE_0 = 0f;
     private static final float UPDATE_DISTANCE_1 = 1f;
     private static final float UPDATE_DISTANCE_2 = 2f;
+    private static int GEO_ACCURACY = 45;
 
 
     private LocationRequest mLocationRequest;
@@ -109,8 +110,9 @@ public class LocationService extends LifecycleService implements OnCompleteListe
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        updateLocationInSeconds = Integer.parseInt(sharedPreferences.getString("listSeconds", "0"));
-        updateLocationDistance = Integer.parseInt(sharedPreferences.getString("listMeters", "0"));
+        updateLocationInSeconds = Integer.parseInt(sharedPreferences.getString(listSeconds, "0"));
+        updateLocationDistance = Integer.parseInt(sharedPreferences.getString(listMeters, "0"));
+        GEO_ACCURACY = sharedPreferences.getInt(geo_accuracy, 45);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -143,12 +145,8 @@ public class LocationService extends LifecycleService implements OnCompleteListe
                 try {
                     Log.i(TAG, "Сервис запущен");
                     places = new ArrayList<>();
+
                     mPlaceViewModel = new PlaceViewModel(getApplication());
-
-//                    mPlaceViewModel = new ViewModelProvider(this,
-//                            new ModelFactory(getApplication())).get(PlaceViewModel.class);
-
-
                     mPlaceViewModel.getPlacesToService().observe(this, new androidx.lifecycle.Observer<List<Place>>() {
                         @Override
                         public void onChanged(@Nullable List<Place> placesUpdate) {
@@ -175,8 +173,8 @@ public class LocationService extends LifecycleService implements OnCompleteListe
                     public void onLocationResult(@NonNull LocationResult locationResult) {
                         super.onLocationResult(locationResult);
                         currentLoc = locationResult.getLastLocation();
-                        if (currentLoc.getAccuracy() < 45) {
-                            checkLocation(currentLoc);
+                        if (currentLoc.getAccuracy() <= GEO_ACCURACY) {
+                            checkLocationInProximity(currentLoc);
                         }
                     }
                 };
@@ -238,7 +236,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void checkLocation(Location location) {
+    private void checkLocationInProximity(Location location) {
         float distance;
         double lat;
         double lng;
@@ -607,7 +605,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case "listSeconds":
+            case listSeconds:
                 updateLocationInSeconds = Integer.parseInt(sharedPreferences.getString(s, "0"));
 
                 switch (updateLocationInSeconds) {
@@ -637,7 +635,7 @@ public class LocationService extends LifecycleService implements OnCompleteListe
                         break;
                 }
                 break;
-            case "listMeters":
+            case listMeters:
                 updateLocationDistance = Integer.parseInt(sharedPreferences.getString(s, "0"));
                 switch (updateLocationDistance) {
                     case 0:
@@ -659,6 +657,11 @@ public class LocationService extends LifecycleService implements OnCompleteListe
                         requestLocationUpdates();
                         break;
                 }
+                break;
+
+            case geo_accuracy:
+                GEO_ACCURACY = sharedPreferences.getInt(s, 45);
+                Log.d(TAG, "GEO_ACCURACY: " + GEO_ACCURACY);
                 break;
         }
     }

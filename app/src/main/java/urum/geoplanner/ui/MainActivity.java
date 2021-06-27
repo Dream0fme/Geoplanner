@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        activeService = sharedPreferences.getBoolean("switch", true);
+        activeService = sharedPreferences.getBoolean(switchService, true);
 
         connectorService = new ConnectorService(this);
         getLifecycle().addObserver(connectorService);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     @Override
                     public void onClick(View v) {
                         SharedPreferences.Editor e = sharedPreferences.edit();
-                        e.putBoolean("switch", true);
+                        e.putBoolean(switchService, true);
                         e.apply();
                         startService(new Intent(MainActivity.this, LocationService.class));
                     }
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case "switch":
+            case switchService:
                 activeService = sharedPreferences.getBoolean(s, true);
                 break;
         }

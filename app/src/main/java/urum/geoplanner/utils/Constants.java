@@ -36,6 +36,13 @@ public final class Constants {
     public static final int REQUEST_CHECK_SETTINGS = 110;
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
+    /* Constants for settings */
+    public static final String listSeconds = "listSeconds";
+    public static final String listMeters = "listMeters";
+    public static final String geo_accuracy = "geo_accuracy";
+    public static final String switchService = "switchService";
+    public static final String checkBoxAutoStart = "checkBoxAutoStart";
+
 
     /* Channel notifications */
     public static final Map<Integer, String> channel = new HashMap<Integer, String>() {{

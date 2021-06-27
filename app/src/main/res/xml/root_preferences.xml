@@ -9,12 +9,12 @@
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             app:iconSpaceReserved="false"
-            app:key="switch"
+            app:key="switchService"
             app:title="@string/service_actice" />
 
         <androidx.preference.ListPreference
             app:defaultValue="0"
-            app:dependency="switch"
+            app:dependency="switchService"
             app:entries="@array/seconds_entries"
             app:entryValues="@array/entry_seconds"
             app:iconSpaceReserved="false"
@@ -24,7 +24,7 @@
 
         <androidx.preference.ListPreference
             app:defaultValue="0"
-            app:dependency="switch"
+            app:dependency="switchService"
             app:entries="@array/meters_entries"
             app:entryValues="@array/entry_meters"
             app:iconSpaceReserved="false"
@@ -32,9 +32,22 @@
             app:title="@string/service_update_in_meters"
             app:useSimpleSummaryProvider="true" />
 
+        <SeekBarPreference
+            android:key="geo_accuracy"
+            app:dependency="switchService"
+            app:iconSpaceReserved="false"
+            android:title="Предел точности геолокации в метрах"
+            android:max="100"
+            app:min="30"
+            app:adjustable="true"
+            app:isPreferenceVisible="true"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            android:defaultValue="45" />
+
         <androidx.preference.CheckBoxPreference
+            app:dependency="switchService"
             android:defaultValue="true"
-            app:dependency="switch"
             app:iconSpaceReserved="false"
             app:key="checkBoxAutostart"
             app:title="@string/service_autostart" />
@@ -45,14 +58,6 @@
         app:iconSpaceReserved="false"
         app:title="@string/archive_header">
 
-        <!--        <androidx.preference.DialogPreference
-                    app:dialogMessage="zxc"
-                    app:dialogTitle="123"
-                    app:key="dialog"
-                    app:negativeButtonText="Cancel"
-                    app:positiveButtonText="OK"
-                    app:title="Fun Thing" />-->
-
         <urum.geoplanner.utils.UnArchiveAllDialogPreference
             android:summary="Разархивировать все записи"
             android:title="@string/archive_unarchive"
@@ -61,16 +66,6 @@
             android:summary="Удалить все записи из архива"
             android:title="@string/archive_delete"
             app:iconSpaceReserved="false" />
-
-        <!--        <intent android:action="android.settings.AIRPLANE_MODE_SETTINGS" />-->
-
-
-        <!--        <androidx.preference.SwitchPreferenceCompat-->
-        <!--            app:iconSpaceReserved="false"-->
-        <!--            app:key="attachment"-->
-        <!--            app:summaryOff="@string/attachment_summary_off"-->
-        <!--            app:summaryOn="@string/attachment_summary_on"-->
-        <!--            app:title="@string/attachment_title" />-->
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory

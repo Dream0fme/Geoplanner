@@ -12,6 +12,9 @@ import androidx.preference.PreferenceManager;
 
 import urum.geoplanner.service.LocationService;
 
+import static urum.geoplanner.utils.Constants.checkBoxAutoStart;
+import static urum.geoplanner.utils.Constants.switchService;
+
 
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "mytag";
@@ -24,8 +27,8 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        activeService = sharedPreferences.getBoolean("switch", false);
-        autostartService = sharedPreferences.getBoolean("checkBoxAutostart", false);
+        activeService = sharedPreferences.getBoolean(switchService, false);
+        autostartService = sharedPreferences.getBoolean(checkBoxAutoStart, false);
         String action = intent.getAction();
         Log.d(TAG, "getAction: " + action);
         if (action.equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED) ||
