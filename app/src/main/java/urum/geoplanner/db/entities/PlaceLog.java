@@ -8,14 +8,14 @@ import androidx.room.Entity;
 public
 class PlaceLog extends Place {
 
-   @ColumnInfo(name = "date")
-   private String date;
+    @ColumnInfo(name = "date")
+    private String date;
 
-   public String getDate() {
-      return date;
-   }
+    public String getDate() {
+        return date;
+    }
 
-   public void setDate(String date) {
-      this.date = date;
-   }
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

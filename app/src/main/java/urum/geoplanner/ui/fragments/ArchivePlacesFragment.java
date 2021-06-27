@@ -80,7 +80,7 @@ public class ArchivePlacesFragment extends Fragment {
                 }
                 mainActivity.binding.fabButton.show();
 
-                if(mainActivity.binding.navView.getVisibility() == View.VISIBLE){
+                if (mainActivity.binding.navView.getVisibility() == View.VISIBLE) {
                     mainActivity.slideUp();
                 } else {
                     mainActivity.binding.navView.setVisibility(View.VISIBLE);

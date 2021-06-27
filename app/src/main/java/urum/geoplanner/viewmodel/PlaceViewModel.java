@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import urum.geoplanner.db.PlaceRoomDatabase;
 import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.db.entities.PlaceLog;
 import urum.geoplanner.db.repository.PlaceRepository;
@@ -67,7 +66,7 @@ public class PlaceViewModel extends AndroidViewModel {
         mRepository.updateToPlaces(place);
     }
 
-    public void unarchiveAll(){
+    public void unarchiveAll() {
         mRepository.unarchiveAll();
     }
 

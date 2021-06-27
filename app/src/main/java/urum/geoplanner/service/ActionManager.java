@@ -37,8 +37,17 @@ import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
-
-import static urum.geoplanner.utils.Constants.*;
+import static urum.geoplanner.utils.Constants.CHANNEL_ID;
+import static urum.geoplanner.utils.Constants.DELIVER_SMS_FLAG;
+import static urum.geoplanner.utils.Constants.FROM_NOTIFICATION_TO_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.ID_FROM_NOTIFICATION;
+import static urum.geoplanner.utils.Constants.NUMBER_DELIVER;
+import static urum.geoplanner.utils.Constants.NUMBER_SENT;
+import static urum.geoplanner.utils.Constants.SENT_SMS_FLAG;
+import static urum.geoplanner.utils.Constants.SMS_BODY;
+import static urum.geoplanner.utils.Constants.SMS_DELIVER;
+import static urum.geoplanner.utils.Constants.SMS_SENT;
+import static urum.geoplanner.utils.Constants.TAG;
 
 
 @SuppressWarnings("MissingPermission")

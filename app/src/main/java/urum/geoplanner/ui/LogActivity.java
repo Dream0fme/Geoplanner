@@ -1,13 +1,11 @@
 package urum.geoplanner.ui;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -36,14 +31,13 @@ import java.util.List;
 import urum.geoplanner.R;
 import urum.geoplanner.adapter.PlaceLogAdapter;
 import urum.geoplanner.databinding.ActivityLogBinding;
-import urum.geoplanner.databinding.ActivityMainBinding;
 import urum.geoplanner.db.entities.PlaceLog;
 import urum.geoplanner.service.ConnectorService;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static urum.geoplanner.utils.Constants.CLOSEAPPINTENTFILTER;
-import static urum.geoplanner.utils.Constants.*;
+import static urum.geoplanner.utils.Constants.TAG;
 
 
 @SuppressLint("RestrictedApi")

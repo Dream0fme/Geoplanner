@@ -65,8 +65,16 @@ import urum.geoplanner.service.ConnectorService;
 import urum.geoplanner.service.LocationService;
 import urum.geoplanner.utils.BootReceiver;
 
+import static urum.geoplanner.utils.Constants.CLOSEAPPINTENTFILTER;
+import static urum.geoplanner.utils.Constants.FROM_ACTIVITY_PLACE;
+import static urum.geoplanner.utils.Constants.FROM_NOTIFICATION_TO_SETTINGS;
+import static urum.geoplanner.utils.Constants.LATITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.LOCATION_PERMISSIONS;
+import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.REQUEST_CHECK_SETTINGS;
+import static urum.geoplanner.utils.Constants.TAG;
+import static urum.geoplanner.utils.Constants.switchService;
 import static urum.geoplanner.utils.Utils.enableLayout;
-import static urum.geoplanner.utils.Constants.*;
 
 
 @RequiresApi(api = Build.VERSION_CODES.M)

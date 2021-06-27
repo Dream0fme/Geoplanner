@@ -3,7 +3,6 @@ package urum.geoplanner.db.repository;
 
 import android.app.Application;
 
-
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class PlaceRepository {
     private PlaceDao mPlaceDao;
     private LiveData<List<Place>> mAllPlaces;
     private LiveData<List<Place>> mAllPlacesArchive;
-    public  LiveData<List<Place>> mAllPlacesToService;
+    public LiveData<List<Place>> mAllPlacesToService;
     private LiveData<List<PlaceLog>> mAllPlacesLog;
 
     public PlaceRepository(Application application) {
@@ -31,9 +30,10 @@ public class PlaceRepository {
     }
 
     // Select place
-    public Place getPlace(long id){
+    public Place getPlace(long id) {
         return this.mPlaceDao.getPlace(id);
     }
+
     // return all
     public LiveData<List<Place>> getPlacesFromPlaces() {
         return mAllPlaces;
@@ -79,19 +79,19 @@ public class PlaceRepository {
     }
 
     // Delete
-    public void deleteFromPlaces(long id){
+    public void deleteFromPlaces(long id) {
         PlaceRoomDatabase.databaseWriteExecutor.execute(() -> {
             mPlaceDao.deleteFromPlaces(id);
         });
     }
 
-    public void deleteFromArchive(long id){
+    public void deleteFromArchive(long id) {
         PlaceRoomDatabase.databaseWriteExecutor.execute(() -> {
             mPlaceDao.deleteFromArchive(id);
         });
     }
 
-    public void deleteFromLog(long id){
+    public void deleteFromLog(long id) {
         PlaceRoomDatabase.databaseWriteExecutor.execute(() -> {
             mPlaceDao.deleteFromLog(id);
         });
@@ -99,25 +99,25 @@ public class PlaceRepository {
 
     // Delete all
 
-    public void deleteFromPlacesAll(){
+    public void deleteFromPlacesAll() {
         PlaceRoomDatabase.databaseWriteExecutor.execute(() -> {
             mPlaceDao.deleteFromPlacesAll();
         });
     }
 
-    public void deleteFromArchiveAll(){
+    public void deleteFromArchiveAll() {
         PlaceRoomDatabase.databaseWriteExecutor.execute(() -> {
             mPlaceDao.deleteFromArchiveAll();
         });
     }
 
-    public void deleteFromLogAll(){
+    public void deleteFromLogAll() {
         PlaceRoomDatabase.databaseWriteExecutor.execute(() -> {
             mPlaceDao.deleteFromLogAll();
         });
     }
 
-    public void unarchiveAll(){
+    public void unarchiveAll() {
         PlaceRoomDatabase.databaseWriteExecutor.execute(() -> {
             mPlaceDao.unarchiveAll();
         });

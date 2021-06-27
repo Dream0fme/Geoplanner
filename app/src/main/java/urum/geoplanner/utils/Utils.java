@@ -18,6 +18,7 @@ public class Utils {
             return Navigation.findNavController(view);
         } else return null;
     }
+
     public static void enableLayout(ViewGroup layout, boolean enable) {
         layout.setEnabled(enable);
         for (int i = 0; i < layout.getChildCount(); i++) {

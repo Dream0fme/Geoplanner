@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Entity(tableName = "places")
 public class Place implements Serializable {
 
-    @PrimaryKey(autoGenerate=true)
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @ColumnInfo(name = "sort_id")

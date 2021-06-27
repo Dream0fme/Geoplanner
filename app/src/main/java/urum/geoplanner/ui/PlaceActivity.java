@@ -56,8 +56,21 @@ import urum.geoplanner.service.ConnectorService;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
+import static urum.geoplanner.utils.Constants.ADDRESS_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.CLOSEAPPINTENTFILTER;
+import static urum.geoplanner.utils.Constants.FROM_ACTIVITY_PLACE;
+import static urum.geoplanner.utils.Constants.FROM_MAIN;
+import static urum.geoplanner.utils.Constants.FROM_MAPS;
+import static urum.geoplanner.utils.Constants.FROM_NOTIFICATION_TO_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.ID;
+import static urum.geoplanner.utils.Constants.ID_FROM_NOTIFICATION;
+import static urum.geoplanner.utils.Constants.LATITUDE_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.LATITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE;
+import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Utils.round;
-import static urum.geoplanner.utils.Constants.*;
 
 @SuppressLint("NewApi")
 public class PlaceActivity extends AppCompatActivity {

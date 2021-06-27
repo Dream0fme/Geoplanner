@@ -18,12 +18,12 @@ import urum.geoplanner.ui.ActivityHome;
 import urum.geoplanner.ui.MainActivity;
 
 import static urum.geoplanner.utils.Constants.switchService;
+import static urum.geoplanner.utils.Constants.TAG;
 
 public class ConnectorService implements LifecycleObserver, SharedPreferences.OnSharedPreferenceChangeListener {
     private LocationService mService = null;
     private boolean mBound = false;
 
-    private static final String TAG = "mytag";
     private final Context context;
     private SharedPreferences sharedPreferences;
     private boolean activeService;

@@ -61,10 +61,18 @@ import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static urum.geoplanner.utils.Constants.ADDRESS_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.FROM_ACTIVITY_PLACE;
+import static urum.geoplanner.utils.Constants.FROM_MAPS;
+import static urum.geoplanner.utils.Constants.ID;
+import static urum.geoplanner.utils.Constants.LATITUDE_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.LATITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Utils.enableLayout;
 import static urum.geoplanner.utils.Utils.findNavController;
 import static urum.geoplanner.utils.Utils.round;
-import static urum.geoplanner.utils.Constants.*;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
@@ -859,7 +867,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mapView != null)
+        if (mapView != null)
             mapView.onDestroy();
     }
 
