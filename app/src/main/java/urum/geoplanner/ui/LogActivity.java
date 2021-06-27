@@ -121,7 +121,7 @@ public class LogActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mPlaceViewModel.deleteFromLogAll();
-                        restartActivity();
+                        //restartActivity();
                         Toast.makeText(getApplicationContext(), "Журнал событий очищен", Toast.LENGTH_SHORT).show();
                     }
                 });
