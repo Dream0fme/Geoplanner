@@ -172,6 +172,8 @@ public class LocationService extends LifecycleService implements SharedPreferenc
                     public void onLocationResult(@NonNull LocationResult locationResult) {
                         super.onLocationResult(locationResult);
                         currentLoc = locationResult.getLastLocation();
+                        Log.d(TAG, "lat: " + currentLoc.getLatitude() + ", lng: " + currentLoc.getLongitude() +", accuracy : " + currentLoc.getAccuracy());
+                        Log.d(TAG, "GEO_ACCURACY: " + GEO_ACCURACY);
                         if (currentLoc.getAccuracy() <= GEO_ACCURACY) {
                             checkLocationInProximity(currentLoc);
                         }
@@ -655,7 +657,6 @@ public class LocationService extends LifecycleService implements SharedPreferenc
 
             case Constants.GEO_ACCURACY:
                 GEO_ACCURACY = sharedPreferences.getInt(s, 45);
-                Log.d(TAG, "GEO_ACCURACY: " + GEO_ACCURACY);
                 break;
         }
     }
