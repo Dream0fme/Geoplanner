@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.geoplanner.activites.ActivityHome"
-    android:background="@drawable/launch">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-        <View
-            android:id="@+id/vector"
-            android:layout_width="213dp"
-            android:minWidth="213dp"
-            android:layout_gravity="center|top"
-            android:layout_height="27dp"
-            android:background="@drawable/ic_vector"
-            />
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/some_id"
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="ui.ActivityHome"
+        android:background="@drawable/launch">
+
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_gravity="center|bottom"
-            android:layout_marginTop="40dp"
-            android:text="@string/some_id"
-            android:textAppearance="@style/some_id"
-            android:lineSpacingExtra="3sp"
-            android:fontFamily="sans-serif"
-            android:letterSpacing="0.01"
-            android:translationY="-1.69sp"
-            android:gravity="center_horizontal|top"
-            android:layout_marginBottom="30dp"
-            tools:ignore="UnusedAttribute" />
-
-        <ProgressBar
-            android:id="@+id/splashProgress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp" />
+            android:layout_centerInParent="true">
 
-    </FrameLayout>
-</RelativeLayout>
+            <View
+                android:id="@+id/vector"
+                android:layout_width="213dp"
+                android:minWidth="213dp"
+                android:layout_gravity="center|top"
+                android:layout_height="27dp"
+                android:background="@drawable/ic_vector" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/some_id"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="40dp"
+                android:text="@string/some_id"
+                android:textAppearance="@style/some_id"
+                android:lineSpacingExtra="3sp"
+                android:fontFamily="sans-serif"
+                android:letterSpacing="0.01"
+                android:translationY="-1.69sp"
+                android:gravity="center_horizontal|top"
+                android:layout_marginBottom="30dp"
+                tools:ignore="UnusedAttribute" />
+
+            <ProgressBar
+                android:id="@+id/splashProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dp" />
+
+        </FrameLayout>
+    </RelativeLayout>
+</layout>
