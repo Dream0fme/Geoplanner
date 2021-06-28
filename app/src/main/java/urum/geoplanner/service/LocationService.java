@@ -43,6 +43,7 @@ import java.util.Map;
 import urum.geoplanner.R;
 import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.ui.MainActivity;
+import urum.geoplanner.utils.Constants;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
@@ -108,9 +109,9 @@ public class LocationService extends LifecycleService implements SharedPreferenc
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        updateLocationInSeconds = Integer.parseInt(sharedPreferences.getString(listSeconds, "0"));
-        updateLocationDistance = Integer.parseInt(sharedPreferences.getString(listMeters, "0"));
-        GEO_ACCURACY = sharedPreferences.getInt(geo_accuracy, 45);
+        updateLocationInSeconds = Integer.parseInt(sharedPreferences.getString(LIST_SECONDS, "0"));
+        updateLocationDistance = Integer.parseInt(sharedPreferences.getString(LIST_METERS, "0"));
+        GEO_ACCURACY = sharedPreferences.getInt(Constants.GEO_ACCURACY, 45);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -598,7 +599,7 @@ public class LocationService extends LifecycleService implements SharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case listSeconds:
+            case LIST_SECONDS:
                 updateLocationInSeconds = Integer.parseInt(sharedPreferences.getString(s, "0"));
 
                 switch (updateLocationInSeconds) {
@@ -628,7 +629,7 @@ public class LocationService extends LifecycleService implements SharedPreferenc
                         break;
                 }
                 break;
-            case listMeters:
+            case LIST_METERS:
                 updateLocationDistance = Integer.parseInt(sharedPreferences.getString(s, "0"));
                 switch (updateLocationDistance) {
                     case 0:
@@ -652,7 +653,7 @@ public class LocationService extends LifecycleService implements SharedPreferenc
                 }
                 break;
 
-            case geo_accuracy:
+            case Constants.GEO_ACCURACY:
                 GEO_ACCURACY = sharedPreferences.getInt(s, 45);
                 Log.d(TAG, "GEO_ACCURACY: " + GEO_ACCURACY);
                 break;

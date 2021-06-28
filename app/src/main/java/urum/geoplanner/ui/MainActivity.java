@@ -73,7 +73,7 @@ import static urum.geoplanner.utils.Constants.LOCATION_PERMISSIONS;
 import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
 import static urum.geoplanner.utils.Constants.REQUEST_CHECK_SETTINGS;
 import static urum.geoplanner.utils.Constants.TAG;
-import static urum.geoplanner.utils.Constants.switchService;
+import static urum.geoplanner.utils.Constants.SWITCH_SERVICE;
 import static urum.geoplanner.utils.Utils.enableLayout;
 
 
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        activeService = sharedPreferences.getBoolean(switchService, true);
+        activeService = sharedPreferences.getBoolean(SWITCH_SERVICE, true);
 
         connectorService = new ConnectorService(this);
         getLifecycle().addObserver(connectorService);
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     @Override
                     public void onClick(View v) {
                         SharedPreferences.Editor e = sharedPreferences.edit();
-                        e.putBoolean(switchService, true);
+                        e.putBoolean(SWITCH_SERVICE, true);
                         e.apply();
                         startService(new Intent(MainActivity.this, LocationService.class));
                     }
@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case switchService:
+            case SWITCH_SERVICE:
                 activeService = sharedPreferences.getBoolean(s, true);
                 break;
         }
@@ -392,6 +392,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             permsList.add(0, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
         }
 
+        Log.d(TAG, permsList.toString());
         String[] perms = permsList.toArray(new String[0]);
         if (EasyPermissions.hasPermissions(this, perms)) {
             enableLayout(binding.container, true);
@@ -407,13 +408,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        Log.d(TAG,"GRANTED: "+ perms.toString());
         enableLayout(binding.container, true);
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
         enableLayout(binding.container, false);
+        Log.d(TAG,"Denied: "+ perms.toString());
         for (String perm : perms) {
+            Log.d(TAG,"Denied one: "+ perm);
             if (EasyPermissions.permissionPermanentlyDenied(this, perm)) {
                 Snackbar.make(binding.container,
                         R.string.manual_access_for_geo,

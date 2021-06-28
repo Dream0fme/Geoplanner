@@ -37,11 +37,11 @@ public final class Constants {
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
     /* Constants for settings */
-    public static final String listSeconds = "listSeconds";
-    public static final String listMeters = "listMeters";
-    public static final String geo_accuracy = "geo_accuracy";
-    public static final String switchService = "switchService";
-    public static final String checkBoxAutoStart = "checkBoxAutoStart";
+    public static final String LIST_SECONDS = "listSeconds";
+    public static final String LIST_METERS = "listMeters";
+    public static final String GEO_ACCURACY = "geo_accuracy";
+    public static final String SWITCH_SERVICE = "switchService";
+    public static final String CHECK_BOX_AUTO_START = "checkBoxAutoStart";
 
 
     /* Channel notifications */

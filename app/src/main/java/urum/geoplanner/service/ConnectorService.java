@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
@@ -17,8 +16,7 @@ import androidx.preference.PreferenceManager;
 import urum.geoplanner.ui.ActivityHome;
 import urum.geoplanner.ui.MainActivity;
 
-import static urum.geoplanner.utils.Constants.switchService;
-import static urum.geoplanner.utils.Constants.TAG;
+import static urum.geoplanner.utils.Constants.SWITCH_SERVICE;
 
 public class ConnectorService implements LifecycleObserver, SharedPreferences.OnSharedPreferenceChangeListener {
     private LocationService mService = null;
@@ -32,7 +30,7 @@ public class ConnectorService implements LifecycleObserver, SharedPreferences.On
         this.context = context;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        activeService = sharedPreferences.getBoolean(switchService, true);
+        activeService = sharedPreferences.getBoolean(SWITCH_SERVICE, true);
     }
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -130,7 +128,7 @@ public class ConnectorService implements LifecycleObserver, SharedPreferences.On
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         switch (s) {
-            case switchService:
+            case SWITCH_SERVICE:
                 activeService = sharedPreferences.getBoolean(s, true);
                 if (activeService) {
                     startService();
