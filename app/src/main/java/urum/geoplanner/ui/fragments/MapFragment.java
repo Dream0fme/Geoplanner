@@ -54,6 +54,7 @@ import java.util.Locale;
 import urum.geoplanner.R;
 import urum.geoplanner.databinding.FragmentMapBinding;
 import urum.geoplanner.db.entities.Place;
+import urum.geoplanner.service.LastLocationListener;
 import urum.geoplanner.ui.MainActivity;
 import urum.geoplanner.ui.PlaceActivity;
 import urum.geoplanner.utils.GeocoderAdapter;
@@ -73,8 +74,6 @@ import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
 import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Utils.enableLayout;
 import static urum.geoplanner.utils.Utils.findNavController;
-import static urum.geoplanner.utils.Utils.getAddressFromLocation;
-import static urum.geoplanner.utils.Utils.getLastLocation;
 import static urum.geoplanner.utils.Utils.round;
 
 
@@ -103,6 +102,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public MapView mapView;
 
     MainActivity mainActivity;
+
+    LatLng myLocation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,6 +144,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
     }
 
     @Override
@@ -249,12 +251,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         showCurrentLocationOnMap();
         mMap.setOnMapClickListener(this);
         if (fromActivityPlace & (lat != 0.0 & lng != 0.0)) {
-            LatLng myLocation = new LatLng(lat, lng);
+            myLocation = new LatLng(lat, lng);
             //mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
             //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
         } else {
-            LatLng myLocation = getLastLocation(requireActivity());
+            LastLocationListener.getInstance(null, requireActivity()).observe(this, new Observer<LatLng>() {
+                @Override
+                public void onChanged(@Nullable LatLng location) {
+                    myLocation = location;
+                }
+            });
+
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
         }
         //mMap.setOnMapLongClickListener(this);
@@ -813,6 +821,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         Bundle extras = getArguments();
         if (extras != null) {
+
+            LatLng position = extras.getParcelable("lastPosition");
+            Log.d(TAG, position.toString());
             fromActivityPlace = extras.getBoolean(FROM_ACTIVITY_PLACE);
             lat = extras.getDouble(LATITUDE_FROM_PLACEACTIVITY);
             lng = extras.getDouble(LONGITUDE_FROM_PLACEACTIVITY);
