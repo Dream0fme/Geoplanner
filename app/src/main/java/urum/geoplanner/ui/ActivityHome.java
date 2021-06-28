@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,8 +20,7 @@ import static urum.geoplanner.utils.Utils.getLastLocation;
 public class ActivityHome extends AppCompatActivity {
     int SPLASH_TIME;
     int SPLASH_TIME_MIN = 1200;
-    int SPLASH_TIME_MAX = 3000;
-    ProgressBar splashProgress;
+    int SPLASH_TIME_MAX = 2700;
 
     ActivityHomeBinding binding;
 
