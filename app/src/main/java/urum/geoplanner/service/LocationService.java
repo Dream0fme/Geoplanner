@@ -128,7 +128,6 @@ public class LocationService extends LifecycleService implements SharedPreferenc
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -227,7 +226,7 @@ public class LocationService extends LifecycleService implements SharedPreferenc
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(@NonNull Intent intent) {
         super.onBind(intent);
         Log.i(TAG, "Подключение клиента");
         Log.i(TAG, "Переходим на фоновый режим");
@@ -236,7 +235,6 @@ public class LocationService extends LifecycleService implements SharedPreferenc
         return mBinder;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkLocationInProximity(Location location) {
         float distance;
         double lat;
@@ -293,7 +291,6 @@ public class LocationService extends LifecycleService implements SharedPreferenc
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void entering(Place place) {
         String namePlace = place.getName();
         int id = (int) place.getId();
@@ -324,12 +321,14 @@ public class LocationService extends LifecycleService implements SharedPreferenc
                     Log.d(TAG, "Выключаем звук");
                     //wakeUp(context);
                     if (mNotificationManager != null) {
-                        if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
-                            Intent dndIntent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                            dndIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(dndIntent);
-                        } else {
-                            actionManager.onDoNotDisturbMode();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
+                                Intent dndIntent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                                dndIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(dndIntent);
+                            } else {
+                                actionManager.onDoNotDisturbMode();
+                            }
                         }
                         notificationManager.notify(NOTIFICATION_ID + pos, actionManager.getNotification(namePlace, true, id, "Режим 'Не беспокоить' включен", pos, "", ""));
                     }
@@ -338,12 +337,14 @@ public class LocationService extends LifecycleService implements SharedPreferenc
                     //wakeUp(context);
                     Log.d(TAG, "Включаем звук");
                     if (mNotificationManager != null) {
-                        if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
-                            Intent dndIntent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                            dndIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(dndIntent);
-                        } else {
-                            actionManager.offDoNotDisturbMode();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
+                                Intent dndIntent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                                dndIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(dndIntent);
+                            } else {
+                                actionManager.offDoNotDisturbMode();
+                            }
                         }
                         notificationManager.notify(NOTIFICATION_ID + pos, actionManager.getNotification(namePlace, true, id, "Режим 'Не беспокоить' выключен", pos, "", ""));
                     }
@@ -375,7 +376,6 @@ public class LocationService extends LifecycleService implements SharedPreferenc
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void exiting(Place place) {
         String namePlace = place.getName();
         int id = (int) place.getId();

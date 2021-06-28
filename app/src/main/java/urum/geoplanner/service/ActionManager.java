@@ -132,7 +132,7 @@ public class ActionManager {
                         action, 0);
                 builder.addAction(R.drawable.ic_launch, "Отправить SMS", actionPendingIntent);
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP & Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 builder.setSmallIcon(R.drawable.ic_location_notification);
                 builder.setColor(context.getResources().getColor(R.color.myPeach));
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -213,7 +213,7 @@ public class ActionManager {
                 builder.addAction(R.drawable.ic_launch, "Отправить SMS", actionPendingIntent);
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP & Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 builder.setSmallIcon(R.drawable.ic_location_notification);
                 builder.setColor(context.getResources().getColor(R.color.myPeach));
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -339,7 +339,7 @@ public class ActionManager {
                 break;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP & Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             builder.setSmallIcon(R.drawable.ic_location_notification);
             builder.setColor(context.getResources().getColor(R.color.myPeach));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

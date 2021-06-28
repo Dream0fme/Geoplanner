@@ -1,11 +1,11 @@
 package urum.geoplanner.utils;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.preference.PreferenceManager;
@@ -22,7 +22,6 @@ public class BootReceiver extends BroadcastReceiver {
     boolean activeService;
     boolean autostartService;
 
-    @SuppressLint("NewApi")
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -39,7 +38,11 @@ public class BootReceiver extends BroadcastReceiver {
             if (!isServiceRunning(LocationService.class, context) & autostartService & activeService) {
                 Log.d(TAG, "Service: Autorun");
                 Intent serviceIntent = new Intent(context, LocationService.class);
-                context.startForegroundService(serviceIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(serviceIntent);
+                } else {
+                    context.startService(serviceIntent);
+                }
             } else {
                 Log.d(TAG, "Service: already running or stop active ");
             }

@@ -291,7 +291,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceItemVie
     }
 
 
-    @SuppressLint("NewApi")
     public void onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {

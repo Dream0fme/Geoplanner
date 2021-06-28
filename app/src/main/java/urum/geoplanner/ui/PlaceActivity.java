@@ -52,7 +52,6 @@ import urum.geoplanner.viewmodel.PlaceViewModel;
 import static urum.geoplanner.utils.Constants.*;
 import static urum.geoplanner.utils.Utils.round;
 
-@SuppressLint("NewApi")
 public class PlaceActivity extends AppCompatActivity {
     private String PACKAGE_NAME;
     Geocoder geocoder;

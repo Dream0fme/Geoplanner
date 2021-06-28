@@ -38,7 +38,6 @@ import urum.geoplanner.viewmodel.PlaceViewModel;
 
 public class ArchivePlacesFragment extends Fragment {
 
-
     FragmentArchivePlacesBinding binding;
     private LinearLayoutManager layoutManager;
     private PlaceViewModel mViewModel;
@@ -51,16 +50,12 @@ public class ArchivePlacesFragment extends Fragment {
 
     MainActivity mainActivity;
 
-    public ArchivePlacesFragment() {
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
