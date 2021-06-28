@@ -44,6 +44,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -72,8 +73,8 @@ import static urum.geoplanner.utils.Constants.LATITUDE_FROM_PLACEACTIVITY;
 import static urum.geoplanner.utils.Constants.LOCATION_PERMISSIONS;
 import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
 import static urum.geoplanner.utils.Constants.REQUEST_CHECK_SETTINGS;
-import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Constants.SWITCH_SERVICE;
+import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Utils.enableLayout;
 
 
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private GoogleApiClient googleApiClient;
     private LocationRequest mLocationRequest;
     Bundle bundle;
+
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -408,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        Log.d(TAG,"GRANTED: "+ perms.toString());
+        Log.d(TAG, "GRANTED: " + perms.toString());
         enableLayout(binding.container, true);
     }
 
@@ -416,9 +418,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
 
         enableLayout(binding.container, false);
-        Log.d(TAG,"Denied: "+ perms.toString());
+        Log.d(TAG, "Denied: " + perms.toString());
         for (String perm : perms) {
-            Log.d(TAG,"Denied one: "+ perm);
+            Log.d(TAG, "Denied one: " + perm);
             if (EasyPermissions.permissionPermanentlyDenied(this, perm)) {
                 Snackbar.make(binding.container,
                         R.string.manual_access_for_geo,
