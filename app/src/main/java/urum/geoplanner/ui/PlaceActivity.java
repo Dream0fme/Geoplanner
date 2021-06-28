@@ -3,7 +3,6 @@ package urum.geoplanner.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,7 +28,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +38,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.content.CursorLoader;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.slider.LabelFormatter;
+import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -78,22 +78,32 @@ public class PlaceActivity extends AppCompatActivity {
     private String PACKAGE_NAME;
     Geocoder geocoder;
     List<Address> addresses;
+
     String errorMessage;
+
     CheckBox entering, exiting;
+
     TextInputEditText nameBox;
     AutoCompleteTextView addressBox;
-    TextInputEditText conditionBox;
     TextInputEditText number, numberExit;
     TextInputEditText sms, smsExit;
+
     Button delButton;
     Button saveButton;
     MaterialButton btnGoogleMap, btnNumberEnter, btnNumberExit;
+
     Spinner spinner, spinnerExit;
+
     RelativeLayout linearLayout, linearLayoutEntering, linearLayoutExit;
-    TextInputLayout addressLayout, radiusBox;
-    TextInputLayout layoutNumber, layoutNumberExit;
-    TextInputLayout layoutSms, layoutSmsExit;
-    TextView addressFromList;
+
+    TextInputLayout nameBoxInput;
+    TextInputLayout addressBoxInput;
+    TextInputLayout numberBoxInput, numberExitBoxInput;
+    TextInputLayout smsBoxInput, smsExitBoxInput;
+
+    Slider conditionBox;
+
+
     long placeId = 0;
     double lat = 0.0;
     double lng = 0.0;
@@ -115,7 +125,7 @@ public class PlaceActivity extends AppCompatActivity {
     private PlaceViewModel mPlaceViewModel;
 
 
-    @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
+    @SuppressLint({"SimpleDateFormat", "SetTextI18n", "CutPasteId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,17 +167,21 @@ public class PlaceActivity extends AppCompatActivity {
         registerReceiver(CloseReceiver, new IntentFilter(CLOSEAPPINTENTFILTER));
         mNotificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         linearLayout = findViewById(R.id.linLayout);
+
         btnGoogleMap = findViewById(R.id.googleMapBtn);
         btnNumberEnter = findViewById(R.id.searchNubmerEnter); // linLayoutEntering , linearLayoutEntering
         btnNumberExit = findViewById(R.id.searchNubmerExit); //linLayoutExit , linearLayoutExit
-        addressLayout = findViewById(R.id.addressBox);
-        radiusBox = findViewById(R.id.radiusBox);
+
+        nameBoxInput = findViewById(R.id.nameBoxInput);
+        addressBoxInput = findViewById(R.id.addressBox);
+        //radiusBox = findViewById(R.id.radiusBox);
+
         linearLayoutEntering = findViewById(R.id.linLayoutEntering);
         linearLayoutExit = findViewById(R.id.linLayoutExit);
-        layoutNumber = findViewById(R.id.txtInputLnumber);
-        layoutSms = findViewById(R.id.txtInputLsms);
-        layoutNumberExit = findViewById(R.id.textInputLayoutNum);
-        layoutSmsExit = findViewById(R.id.textInputLayoutSms);
+        numberBoxInput = findViewById(R.id.txtInputLnumber);
+        smsBoxInput = findViewById(R.id.txtInputLsms);
+        numberExitBoxInput = findViewById(R.id.textInputLayoutNum);
+        smsExitBoxInput = findViewById(R.id.textInputLayoutSms);
         numberExit = findViewById(R.id.numberExit);
         smsExit = findViewById(R.id.editSmsExit);
         String[] actions = getResources().getStringArray(R.array.actions);
@@ -180,9 +194,20 @@ public class PlaceActivity extends AppCompatActivity {
         addressBox.setAdapter(new GeocoderAdapter(this, android.R.layout.simple_list_item_1));
         number = findViewById(R.id.number);
         sms = findViewById(R.id.editSMS);
-        conditionBox = findViewById(R.id.condition);
+        //conditionBox = findViewById(R.id.condition);
         entering = findViewById(R.id.entering);
         exiting = findViewById(R.id.exiting);
+
+        conditionBox = findViewById(R.id.radiusBox);
+
+        conditionBox.setLabelFormatter(new LabelFormatter() {
+            @SuppressLint("DefaultLocale")
+            @NonNull
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format("%.0f м.", value);
+            }
+        });
 
         entering.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -387,7 +412,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if(extras.getBoolean(FROM_NOTIFICATION_TO_PLACEACTIVITY)){
+            if (extras.getBoolean(FROM_NOTIFICATION_TO_PLACEACTIVITY)) {
                 placeId = extras.getLong(ID_FROM_NOTIFICATION, 0);
             } else placeId = extras.getLong(ID);
 
@@ -399,7 +424,7 @@ public class PlaceActivity extends AppCompatActivity {
         if (placeId > 0) { // если 0, то добавление
             Place place = mPlaceViewModel.getPlace(placeId);
             nameBox.setText(place.getName());
-            conditionBox.setText(Integer.toString(place.getCondition()));
+            conditionBox.setValue(place.getCondition());
             Pattern patternGEO = Pattern.compile("^(\\-?\\d+(\\.\\d+)?),\\s*(\\-?\\d+(\\.\\d+)?)$");
             Matcher geoMatcher = patternGEO.matcher(place.getAddress());
             if (!geoMatcher.matches()) {
@@ -506,27 +531,27 @@ public class PlaceActivity extends AppCompatActivity {
         switch (pos) {
             case 0:
                 if (findViewById(R.id.txtInputLnumber) == null) {
-                    linearLayoutEntering.addView(layoutNumber);
+                    linearLayoutEntering.addView(numberBoxInput);
                     linearLayoutEntering.addView(btnNumberEnter);
                 }
                 if (findViewById(R.id.txtInputLsms) != null) {
-                    linearLayoutEntering.removeView(layoutSms);
+                    linearLayoutEntering.removeView(smsBoxInput);
                 }
                 break;
             case 1:
                 if (findViewById(R.id.txtInputLnumber) == null) {
-                    linearLayoutEntering.addView(layoutNumber);
+                    linearLayoutEntering.addView(numberBoxInput);
                     linearLayoutEntering.addView(btnNumberEnter);
                 }
                 if (findViewById(R.id.txtInputLsms) == null) {
-                    ((RelativeLayout.LayoutParams) layoutSms.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.txtInputLnumber);
-                    linearLayoutEntering.addView(layoutSms);
-                    layoutSms.setCounterMaxLength(160);
-                    layoutSms.setHint(getString(R.string.input_sms));
+                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.txtInputLnumber);
+                    linearLayoutEntering.addView(smsBoxInput);
+                    smsBoxInput.setCounterMaxLength(160);
+                    smsBoxInput.setHint(getString(R.string.input_sms));
                 } else {
-                    ((RelativeLayout.LayoutParams) layoutSms.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.txtInputLnumber);
-                    layoutSms.setCounterMaxLength(160);
-                    layoutSms.setHint(getString(R.string.input_sms));
+                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.txtInputLnumber);
+                    smsBoxInput.setCounterMaxLength(160);
+                    smsBoxInput.setHint(getString(R.string.input_sms));
                 }
                 break;
             case 3:
@@ -534,28 +559,28 @@ public class PlaceActivity extends AppCompatActivity {
             case 5:
             case 6:
                 if (findViewById(R.id.txtInputLnumber) != null) {
-                    linearLayoutEntering.removeView(layoutNumber);
+                    linearLayoutEntering.removeView(numberBoxInput);
                     linearLayoutEntering.removeView(btnNumberEnter);
 
                 }
                 if (findViewById(R.id.txtInputLsms) != null) {
-                    linearLayoutEntering.removeView(layoutSms);
+                    linearLayoutEntering.removeView(smsBoxInput);
                 }
                 break;
             case 2:
                 if (findViewById(R.id.txtInputLnumber) != null) {
-                    linearLayoutEntering.removeView(layoutNumber);
+                    linearLayoutEntering.removeView(numberBoxInput);
                     linearLayoutEntering.removeView(btnNumberEnter);
                 }
                 if (findViewById(R.id.txtInputLsms) == null) {
-                    linearLayoutEntering.addView(layoutSms);
-                    ((RelativeLayout.LayoutParams) layoutSms.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinner);
-                    layoutSms.setCounterMaxLength(300);
-                    layoutSms.setHint(getString(R.string.input_notification));
+                    linearLayoutEntering.addView(smsBoxInput);
+                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinner);
+                    smsBoxInput.setCounterMaxLength(300);
+                    smsBoxInput.setHint(getString(R.string.input_notification));
                 } else {
-                    ((RelativeLayout.LayoutParams) layoutSms.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinner);
-                    layoutSms.setCounterMaxLength(300);
-                    layoutSms.setHint(getString(R.string.input_notification));
+                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinner);
+                    smsBoxInput.setCounterMaxLength(300);
+                    smsBoxInput.setHint(getString(R.string.input_notification));
                 }
                 break;
 
@@ -566,27 +591,27 @@ public class PlaceActivity extends AppCompatActivity {
         switch (pos) {
             case 0:
                 if (findViewById(R.id.textInputLayoutNum) == null) {
-                    linearLayoutExit.addView(layoutNumberExit);
+                    linearLayoutExit.addView(numberExitBoxInput);
                     linearLayoutExit.addView(btnNumberExit);
                 }
                 if (findViewById(R.id.textInputLayoutSms) != null) {
-                    linearLayoutExit.removeView(layoutSmsExit);
+                    linearLayoutExit.removeView(smsExitBoxInput);
                 }
                 break;
             case 1:
                 if (findViewById(R.id.textInputLayoutNum) == null) {
-                    linearLayoutExit.addView(layoutNumberExit);
+                    linearLayoutExit.addView(numberExitBoxInput);
                     linearLayoutExit.addView(btnNumberExit);
                 }
                 if (findViewById(R.id.textInputLayoutSms) == null) {
-                    linearLayoutExit.addView(layoutSmsExit);
-                    ((RelativeLayout.LayoutParams) layoutSmsExit.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.textInputLayoutNum);
-                    layoutSmsExit.setCounterMaxLength(160);
-                    layoutSmsExit.setHint(getString(R.string.input_sms));
+                    linearLayoutExit.addView(smsExitBoxInput);
+                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.textInputLayoutNum);
+                    smsExitBoxInput.setCounterMaxLength(160);
+                    smsExitBoxInput.setHint(getString(R.string.input_sms));
                 } else {
-                    ((RelativeLayout.LayoutParams) layoutSmsExit.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.textInputLayoutNum);
-                    layoutSmsExit.setCounterMaxLength(160);
-                    layoutSmsExit.setHint(getString(R.string.input_sms));
+                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.textInputLayoutNum);
+                    smsExitBoxInput.setCounterMaxLength(160);
+                    smsExitBoxInput.setHint(getString(R.string.input_sms));
                 }
                 break;
             case 3:
@@ -594,27 +619,27 @@ public class PlaceActivity extends AppCompatActivity {
             case 5:
             case 6:
                 if (findViewById(R.id.textInputLayoutNum) != null) {
-                    linearLayoutExit.removeView(layoutNumberExit);
+                    linearLayoutExit.removeView(numberExitBoxInput);
                     linearLayoutExit.removeView(btnNumberExit);
                 }
                 if (findViewById(R.id.textInputLayoutSms) != null) {
-                    linearLayoutExit.removeView(layoutSmsExit);
+                    linearLayoutExit.removeView(smsExitBoxInput);
                 }
                 break;
             case 2:
                 if (findViewById(R.id.textInputLayoutNum) != null) {
-                    linearLayoutExit.removeView(layoutNumberExit);
+                    linearLayoutExit.removeView(numberExitBoxInput);
                     linearLayoutExit.removeView(btnNumberExit);
                 }
                 if (findViewById(R.id.textInputLayoutSms) == null) {
-                    linearLayoutExit.addView(layoutSmsExit);
-                    ((RelativeLayout.LayoutParams) layoutSmsExit.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinnerExit);
-                    layoutSmsExit.setCounterMaxLength(300);
-                    layoutSmsExit.setHint(getString(R.string.input_notification));
+                    linearLayoutExit.addView(smsExitBoxInput);
+                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinnerExit);
+                    smsExitBoxInput.setCounterMaxLength(300);
+                    smsExitBoxInput.setHint(getString(R.string.input_notification));
                 } else {
-                    ((RelativeLayout.LayoutParams) layoutSmsExit.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinnerExit);
-                    layoutSmsExit.setCounterMaxLength(300);
-                    layoutSmsExit.setHint(getString(R.string.input_notification));
+                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinnerExit);
+                    smsExitBoxInput.setCounterMaxLength(300);
+                    smsExitBoxInput.setHint(getString(R.string.input_notification));
                 }
                 break;
 
@@ -645,41 +670,7 @@ public class PlaceActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void save(View view) {
-        if (nameBox.getText().toString().trim().length() == 0) {
-            Toast.makeText(getApplicationContext(), "Введите название места!", Toast.LENGTH_LONG).show();
-        } else if (nameBox.getText().toString().trim().length() > 25) {
-            Toast.makeText(getApplicationContext(), "Слишком длинное название!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.addressBox) != null & addressBox.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Введите адрес!", Toast.LENGTH_LONG).show();
-        } else if (conditionBox.getText().toString().equals("") || conditionBox.length() > 6) {
-            Toast.makeText(getApplicationContext(), "Слишком большой радиус!", Toast.LENGTH_LONG).show();
-        } else if (conditionBox.getText().toString().equals("") || Integer.parseInt(conditionBox.getText().toString()) < 50) {
-            Toast.makeText(getApplicationContext(), "Радиус не может быть меньше 50 метров!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.txtInputLnumber) != null & number.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Введите номер!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.txtInputLnumber) != null & !validatePhoneNumber(number.getText().toString())) {
-            Toast.makeText(getApplicationContext(), "Номер введён неправильно!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 1 & sms.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Введите ваше сообщение!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 2 & sms.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Введите ваше уведомление!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 2 & sms.getText().length() > 300) {
-            Toast.makeText(getApplicationContext(), "Слишком длинное уведомление!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 1 & sms.getText().length() > 160) {
-            Toast.makeText(getApplicationContext(), "Слишком длинное сообщение!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.textInputLayoutNum) != null & numberExit.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Введите номер!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.textInputLayoutNum) != null & !validatePhoneNumber(numberExit.getText().toString())) {
-            Toast.makeText(getApplicationContext(), "Номер введён неправильно!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 2 & smsExit.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Введите ваше уведомление!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 1 & smsExit.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Введите ваше сообщение!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 2 & smsExit.getText().length() > 300) {
-            Toast.makeText(getApplicationContext(), "Слишком длинное уведомление!", Toast.LENGTH_LONG).show();
-        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 1 & smsExit.getText().length() > 160) {
-            Toast.makeText(getApplicationContext(), "Слишком длинное сообщение!", Toast.LENGTH_LONG).show();
-        } else {
+        if (setValidation()) {
             try {
                 int checkBoxEnter, checkBoxExit;
                 if (entering.isChecked()) {
@@ -721,7 +712,7 @@ public class PlaceActivity extends AppCompatActivity {
                         }
 
                         namePlace = nameBox.getText().toString().trim();
-                        condition = Integer.parseInt(conditionBox.getText().toString());
+                        condition = (int) conditionBox.getValue();
                         phone = number.getText().toString().trim();
                         msg = sms.getText().toString().trim();
                         int position = spinner.getSelectedItemPosition();
@@ -753,7 +744,7 @@ public class PlaceActivity extends AppCompatActivity {
                 } else {
                     addressEdit = round(lat, 5) + ",\n" + round(lng, 5);
                     namePlace = nameBox.getText().toString().trim();
-                    condition = Integer.parseInt(conditionBox.getText().toString());
+                    condition = (int) conditionBox.getValue();
                     phone = number.getText().toString().trim();
                     msg = sms.getText().toString().trim();
                     int position = spinner.getSelectedItemPosition();
@@ -783,6 +774,92 @@ public class PlaceActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Используется неверная широта или долгота", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public boolean setValidation() {
+        boolean nameValid, addressValid,
+                numberValid, smsValid, numberExitValid, smsExitValid;
+
+        if (nameBox.getText().toString().trim().length() == 0) {
+            nameBoxInput.setError("Введите название места!");
+            nameValid = false;
+        } else if (nameBox.getText().toString().trim().length() > 25) {
+            nameBoxInput.setError("Слишком длинное название!");
+            nameValid = false;
+        } else {
+            nameBoxInput.setErrorEnabled(false);
+            nameValid = true;
+        }
+
+
+        if (findViewById(R.id.addressBox) != null & addressBox.getText().toString().equals("")) {
+            addressBoxInput.setError("Введите адрес!");
+            addressValid = false;
+        } else {
+            addressBoxInput.setErrorEnabled(false);
+            addressValid = true;
+        }
+
+        if (findViewById(R.id.txtInputLnumber) != null & number.getText().toString().equals("")) {
+            numberBoxInput.setError("Введите номер!");
+            numberValid = false;
+        } else if (findViewById(R.id.txtInputLnumber) != null & !validatePhoneNumber(number.getText().toString())) {
+            numberBoxInput.setError("Номер введён неправильно!");
+            numberValid = false;
+
+        } else {
+            numberBoxInput.setErrorEnabled(false);
+            numberValid = true;
+        }
+
+
+        if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 1 & sms.getText().toString().equals("")) {
+            smsBoxInput.setError("Введите ваше сообщение!");
+            smsValid = false;
+        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 2 & sms.getText().toString().equals("")) {
+            smsBoxInput.setError("Введите ваше уведомление!");
+            smsValid = false;
+        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 2 & sms.getText().length() > 300) {
+            smsBoxInput.setError("Слишком длинное уведомление!");
+            smsValid = false;
+        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 1 & sms.getText().length() > 160) {
+            smsBoxInput.setError("Слишком длинное сообщение!");
+            smsValid = false;
+        } else {
+            smsBoxInput.setErrorEnabled(false);
+            smsValid = true;
+        }
+
+
+        if (findViewById(R.id.textInputLayoutNum) != null & numberExit.getText().toString().equals("")) {
+            numberExitBoxInput.setError("Введите номер!");
+            numberExitValid = false;
+        } else if (findViewById(R.id.textInputLayoutNum) != null & !validatePhoneNumber(numberExit.getText().toString())) {
+            numberExitBoxInput.setError("Номер введён неправильно!");
+            numberExitValid = false;
+        } else {
+            numberExitBoxInput.setErrorEnabled(false);
+            numberExitValid = true;
+        }
+
+        if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 1 & smsExit.getText().toString().equals("")) {
+            smsExitBoxInput.setError("Введите ваше сообщение!");
+            smsExitValid = false;
+        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 2 & smsExit.getText().toString().equals("")) {
+            smsExitBoxInput.setError("Введите ваше уведомление!");
+            smsExitValid = false;
+        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 2 & smsExit.getText().length() > 300) {
+            smsExitBoxInput.setError("Слишком длинное уведомление!");
+            smsExitValid = false;
+        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 1 & smsExit.getText().length() > 160) {
+            smsExitBoxInput.setError("Слишком длинное сообщение!");
+            smsExitValid = false;
+        } else {
+            smsExitBoxInput.setErrorEnabled(false);
+            smsExitValid = true;
+        }
+
+        return nameValid & addressValid & numberValid & smsValid & numberExitValid & smsExitValid;
     }
 
     public void openGoogleMap(View v) {
@@ -1146,18 +1223,6 @@ public class PlaceActivity extends AppCompatActivity {
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             //startActivity(intent);
         }
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        if (manager != null) {
-            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                if (serviceClass.getName().equals(service.service.getClassName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public void grantResult(boolean grant, String permission, final int pos, boolean DND) {
