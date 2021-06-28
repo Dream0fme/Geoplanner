@@ -277,10 +277,10 @@ public class ActionManager {
         editPlace.putExtra(ID_FROM_NOTIFICATION, (long) id);
         editPlace.putExtra(FROM_NOTIFICATION_TO_PLACEACTIVITY, true);
 
-        PendingIntent editIntent = PendingIntent.getActivity(context, 0,
+        PendingIntent editIntent = PendingIntent.getActivity(context, 4,
                 editPlace, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 1,
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 5,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
@@ -297,7 +297,7 @@ public class ActionManager {
                 .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
                 .setStyle(bigTextStyle)
                 .setShowWhen(true)
-                .setOngoing(true)
+//                .setOngoing(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         builder.setContentIntent(activityPendingIntent);
