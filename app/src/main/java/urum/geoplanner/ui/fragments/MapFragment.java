@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -112,7 +113,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         mainActivity = (MainActivity) getActivity();
 
-        final Intent intent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
+        Intent intent;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            intent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
+        } else {
+            intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+        }
 
         snackbarInternet = Snackbar.make(requireActivity().findViewById(R.id.container),
                 R.string.internet_no_connection,

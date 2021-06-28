@@ -322,7 +322,11 @@ public class ActionManager {
                 break;
             case 5:
             case 6:
-                action = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    action = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
+                } else {
+                    action = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                }
                 action.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 actionPendingIntent = PendingIntent.getActivity(context, 0,
                         action, 0);
