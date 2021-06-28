@@ -51,30 +51,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import urum.geoplanner.R;
+import urum.geoplanner.databinding.ActivityPlaceBinding;
 import urum.geoplanner.db.entities.Place;
 import urum.geoplanner.service.ConnectorService;
 import urum.geoplanner.utils.GeocoderAdapter;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
-import static urum.geoplanner.utils.Constants.ADDRESS_FROM_MAPS;
-import static urum.geoplanner.utils.Constants.CLOSEAPPINTENTFILTER;
-import static urum.geoplanner.utils.Constants.FROM_ACTIVITY_PLACE;
-import static urum.geoplanner.utils.Constants.FROM_MAIN;
-import static urum.geoplanner.utils.Constants.FROM_MAPS;
-import static urum.geoplanner.utils.Constants.FROM_NOTIFICATION_TO_PLACEACTIVITY;
-import static urum.geoplanner.utils.Constants.ID;
-import static urum.geoplanner.utils.Constants.ID_FROM_NOTIFICATION;
-import static urum.geoplanner.utils.Constants.LATITUDE_FROM_MAPS;
-import static urum.geoplanner.utils.Constants.LATITUDE_FROM_PLACEACTIVITY;
-import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_MAPS;
-import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
-import static urum.geoplanner.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE;
-import static urum.geoplanner.utils.Constants.TAG;
+import static urum.geoplanner.utils.Constants.*;
 import static urum.geoplanner.utils.Utils.round;
 
 @SuppressLint("NewApi")
 public class PlaceActivity extends AppCompatActivity {
+
+
     private String PACKAGE_NAME;
     Geocoder geocoder;
     List<Address> addresses;
@@ -88,13 +78,13 @@ public class PlaceActivity extends AppCompatActivity {
     TextInputEditText number, numberExit;
     TextInputEditText sms, smsExit;
 
-    Button delButton;
+    Button deleteButton;
     Button saveButton;
     MaterialButton btnGoogleMap, btnNumberEnter, btnNumberExit;
 
     Spinner spinner, spinnerExit;
 
-    RelativeLayout linearLayout, linearLayoutEntering, linearLayoutExit;
+    RelativeLayout relativeLayoutMain, relativeLayoutEntering, relativeLayoutExiting;
 
     TextInputLayout nameBoxInput;
     TextInputLayout addressBoxInput;
@@ -124,12 +114,14 @@ public class PlaceActivity extends AppCompatActivity {
 
     private PlaceViewModel mPlaceViewModel;
 
+    ActivityPlaceBinding binding;
 
     @SuppressLint({"SimpleDateFormat", "SetTextI18n", "CutPasteId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place);
+        binding = ActivityPlaceBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         PACKAGE_NAME = this.getPackageName();
 
         initToolbar();
@@ -137,7 +129,7 @@ public class PlaceActivity extends AppCompatActivity {
         connectorService = new ConnectorService(this);
         getLifecycle().addObserver(connectorService);
 
-        snackbarDND = Snackbar.make(findViewById(R.id.activity_place),
+        snackbarDND = Snackbar.make(binding.activityPlace,
                 R.string.access_for_dnd,
                 Snackbar.LENGTH_INDEFINITE).setAction(R.string.settings,
                 new View.OnClickListener() {
@@ -148,7 +140,7 @@ public class PlaceActivity extends AppCompatActivity {
 
                 });
 
-        snackbarSettings = Snackbar.make(findViewById(R.id.activity_place),
+        snackbarSettings = Snackbar.make(binding.activityPlace,
                 R.string.access_manual,
                 Snackbar.LENGTH_INDEFINITE).setAction(R.string.settings,
                 new View.OnClickListener() {
@@ -166,41 +158,42 @@ public class PlaceActivity extends AppCompatActivity {
 
         registerReceiver(CloseReceiver, new IntentFilter(CLOSEAPPINTENTFILTER));
         mNotificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-        linearLayout = findViewById(R.id.linLayout);
 
-        btnGoogleMap = findViewById(R.id.googleMapBtn);
-        btnNumberEnter = findViewById(R.id.searchNubmerEnter); // linLayoutEntering , linearLayoutEntering
-        btnNumberExit = findViewById(R.id.searchNubmerExit); //linLayoutExit , linearLayoutExit
+//        relativeLayoutMain = findViewById(R.id.relativeLayoutMain);
+//        btnGoogleMap = findViewById(R.id.googleMapBtn);
+//        btnNumberEnter = findViewById(R.id.searchNubmerEnter); // linLayoutEntering , linearLayoutEntering
+//        btnNumberExit = findViewById(R.id.searchNubmerExit); //linLayoutExit , linearLayoutExit
 
-        nameBoxInput = findViewById(R.id.nameBoxInput);
-        addressBoxInput = findViewById(R.id.addressBox);
-        //radiusBox = findViewById(R.id.radiusBox);
+        //nameBoxInput = findViewById(R.id.nameBoxInput);
+        //addressBoxInput = findViewById(R.id.addressBox);
 
-        linearLayoutEntering = findViewById(R.id.linLayoutEntering);
-        linearLayoutExit = findViewById(R.id.linLayoutExit);
-        numberBoxInput = findViewById(R.id.txtInputLnumber);
-        smsBoxInput = findViewById(R.id.txtInputLsms);
-        numberExitBoxInput = findViewById(R.id.textInputLayoutNum);
-        smsExitBoxInput = findViewById(R.id.textInputLayoutSms);
-        numberExit = findViewById(R.id.numberExit);
-        smsExit = findViewById(R.id.editSmsExit);
+//        relativeLayoutEntering = findViewById(R.id.linLayoutEntering);
+//        relativeLayoutExiting = findViewById(R.id.linLayoutExit);
+//        numberBoxInput = findViewById(R.id.txtInputLnumber);
+//        smsBoxInput = findViewById(R.id.txtInputLsms);
+//        numberExitBoxInput = findViewById(R.id.textInputLayoutNum);
+//        smsExitBoxInput = findViewById(R.id.textInputLayoutSms);
+//        numberExit = findViewById(R.id.numberExit);
+//        smsExit = findViewById(R.id.editSmsExit);
+
         String[] actions = getResources().getStringArray(R.array.actions);
 
         geocoder = new Geocoder(this, Locale.getDefault());
         addresses = null;
-        nameBox = findViewById(R.id.nameBox);
-        addressBox = findViewById(R.id.address);
-        addressBox.setThreshold(1);
-        addressBox.setAdapter(new GeocoderAdapter(this, android.R.layout.simple_list_item_1));
-        number = findViewById(R.id.number);
-        sms = findViewById(R.id.editSMS);
+        //nameBox = findViewById(R.id.nameBox);
+//        addressBox = findViewById(R.id.address);
+        binding.addressBox.setThreshold(1);
+        binding.addressBox.setAdapter(new GeocoderAdapter(this, android.R.layout.simple_list_item_1));
+
+//        number = findViewById(R.id.number);
+//        sms = findViewById(R.id.editSMS);
         //conditionBox = findViewById(R.id.condition);
-        entering = findViewById(R.id.entering);
-        exiting = findViewById(R.id.exiting);
+//        entering = findViewById(R.id.entering);
+//        exiting = findViewById(R.id.exiting);
 
-        conditionBox = findViewById(R.id.radiusBox);
+//        conditionBox = findViewById(R.id.radiusBox);
 
-        conditionBox.setLabelFormatter(new LabelFormatter() {
+        binding.conditionBox.setLabelFormatter(new LabelFormatter() {
             @SuppressLint("DefaultLocale")
             @NonNull
             @Override
@@ -209,12 +202,12 @@ public class PlaceActivity extends AppCompatActivity {
             }
         });
 
-        entering.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.entering.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    linearLayout.addView(linearLayoutEntering);
-                    ((RelativeLayout.LayoutParams) exiting.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.linLayoutEntering);
-                    posEnter = spinner.getSelectedItemPosition();
+                    binding.relativeLayoutMain.addView(binding.relativeLayoutEntering);
+                    ((RelativeLayout.LayoutParams) binding.exiting.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.relativeLayoutEntering.getId());
+                    posEnter = binding.spinner.getSelectedItemPosition();
 
                     if (posEnter == 3 || posEnter == 4) {
                         if (!snackbarDND.isShown()) {
@@ -232,24 +225,24 @@ public class PlaceActivity extends AppCompatActivity {
 
                 } else {
                     posEnter = -1;
-                    linearLayout.removeView(linearLayoutEntering);
-                    ((RelativeLayout.LayoutParams) exiting.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.entering);
+                    binding.relativeLayoutMain.removeView(binding.relativeLayoutEntering);
+                    ((RelativeLayout.LayoutParams) binding.exiting.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.entering.getId());
                     if (snackbarDND.isShown()) {
-                        if (exiting.isChecked() & !(spinnerExit.getSelectedItemPosition() == 3 || spinnerExit.getSelectedItemPosition() == 4)) {
+                        if (binding.exiting.isChecked() & !(binding.spinnerExit.getSelectedItemPosition() == 3 || binding.spinnerExit.getSelectedItemPosition() == 4)) {
                             snackbarDND.dismiss();
-                        } else if (!exiting.isChecked()) {
+                        } else if (!binding.exiting.isChecked()) {
                             snackbarDND.dismiss();
                         }
                     } else if (snackbarPermission.isShown()) {
-                        if (exiting.isChecked() & !(spinnerExit.getSelectedItemPosition() == 0 || spinnerExit.getSelectedItemPosition() == 1)) {
+                        if (binding.exiting.isChecked() & !(binding.spinnerExit.getSelectedItemPosition() == 0 || binding.spinnerExit.getSelectedItemPosition() == 1)) {
                             snackbarPermission.dismiss();
-                        } else if (!exiting.isChecked()) {
+                        } else if (!binding.exiting.isChecked()) {
                             snackbarPermission.dismiss();
                         }
                     } else if (snackbarSettings.isShown()) {
-                        if (exiting.isChecked() & !(spinnerExit.getSelectedItemPosition() == 0 || spinnerExit.getSelectedItemPosition() == 1)) {
+                        if (binding.exiting.isChecked() & !(binding.spinnerExit.getSelectedItemPosition() == 0 || binding.spinnerExit.getSelectedItemPosition() == 1)) {
                             snackbarSettings.dismiss();
-                        } else if (!exiting.isChecked()) {
+                        } else if (!binding.exiting.isChecked()) {
                             snackbarSettings.dismiss();
                         }
                     }
@@ -257,14 +250,14 @@ public class PlaceActivity extends AppCompatActivity {
             }
         });
 
-        exiting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.exiting.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
-                    linearLayout.addView(linearLayoutExit);
-                    posExit = spinnerExit.getSelectedItemPosition();
+                    binding.relativeLayoutMain.addView(binding.relativeLayoutExiting);
+                    posExit = binding.spinnerExit.getSelectedItemPosition();
 
-                    if (spinnerExit.getSelectedItemPosition() == 3 || spinnerExit.getSelectedItemPosition() == 4) {
+                    if (binding.spinnerExit.getSelectedItemPosition() == 3 || binding.spinnerExit.getSelectedItemPosition() == 4) {
                         if (!snackbarDND.isShown()) {
                             if (mNotificationManager != null) {
                                 if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
@@ -280,11 +273,11 @@ public class PlaceActivity extends AppCompatActivity {
 
                 } else {
                     posExit = -1;
-                    linearLayout.removeView(linearLayoutExit);
+                    binding.relativeLayoutMain.removeView(binding.relativeLayoutExiting);
                     if (snackbarDND.isShown()) {
-                        if (entering.isChecked() & !(spinner.getSelectedItemPosition() == 3 || spinner.getSelectedItemPosition() == 4)) {
+                        if (binding.entering.isChecked() & !(binding.spinner.getSelectedItemPosition() == 3 || binding.spinner.getSelectedItemPosition() == 4)) {
                             snackbarDND.dismiss();
-                        } else if (!entering.isChecked()) {
+                        } else if (!binding.entering.isChecked()) {
                             snackbarDND.dismiss();
                         }
                     } else if (snackbarPermission.isShown()) {
@@ -294,9 +287,9 @@ public class PlaceActivity extends AppCompatActivity {
                             snackbarPermission.dismiss();
                         }
                     } else if (snackbarSettings.isShown()) {
-                        if (entering.isChecked() & !(spinner.getSelectedItemPosition() == 0 || spinner.getSelectedItemPosition() == 1)) {
+                        if (binding.entering.isChecked() & !(binding.spinner.getSelectedItemPosition() == 0 || binding.spinner.getSelectedItemPosition() == 1)) {
                             snackbarSettings.dismiss();
-                        } else if (!exiting.isChecked()) {
+                        } else if (!binding.exiting.isChecked()) {
                             snackbarSettings.dismiss();
                         }
                     }
@@ -306,12 +299,12 @@ public class PlaceActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, actions);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner = findViewById(R.id.spinner);
-        spinner.setAdapter(adapterSpinner);
-        spinner.setPrompt(getString(R.string.choose_action));
-        spinner.setSelection(2, true);
+//        spinner = findViewById(R.id.spinner);
+        binding.spinner.setAdapter(adapterSpinner);
+        binding.spinner.setPrompt(getString(R.string.choose_action));
+        binding.spinner.setSelection(2, true);
         addOrRemoveView(2);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
@@ -321,7 +314,7 @@ public class PlaceActivity extends AppCompatActivity {
                 snackbarCreate(position);
 
                 if (!(position == 0 || position == 1) &
-                        !(spinnerExit.getSelectedItemPosition() == 0 || spinnerExit.getSelectedItemPosition() == 1)) {
+                        !(binding.spinnerExit.getSelectedItemPosition() == 0 || binding.spinnerExit.getSelectedItemPosition() == 1)) {
                     if (snackbarPermission.isShown()) {
                         snackbarPermission.dismiss();
                         //checkPermission(position);
@@ -339,12 +332,12 @@ public class PlaceActivity extends AppCompatActivity {
                 }
 
 
-                if (position != 3 & !(spinnerExit.getSelectedItemPosition() == 3 || spinnerExit.getSelectedItemPosition() == 4)) {
+                if (position != 3 & !(binding.spinnerExit.getSelectedItemPosition() == 3 || binding.spinnerExit.getSelectedItemPosition() == 4)) {
                     if (snackbarDND.isShown()) {
                         snackbarDND.dismiss();
                     }
                 }
-                if (position != 4 & !(spinnerExit.getSelectedItemPosition() == 3 || spinnerExit.getSelectedItemPosition() == 4)) {
+                if (position != 4 & !(binding.spinnerExit.getSelectedItemPosition() == 3 || binding.spinnerExit.getSelectedItemPosition() == 4)) {
 
                     if (snackbarDND.isShown()) {
                         snackbarDND.dismiss();
@@ -358,13 +351,13 @@ public class PlaceActivity extends AppCompatActivity {
             }
         });
 
-        spinnerExit = findViewById(R.id.spinnerExit);
-        spinnerExit.setAdapter(adapterSpinner);
-        spinnerExit.setAdapter(adapterSpinner);
-        spinnerExit.setPrompt(getString(R.string.choose_action));
-        spinnerExit.setSelection(2, true);
+//        spinnerExit = findViewById(R.id.spinnerExit);
+        binding.spinnerExit.setAdapter(adapterSpinner);
+        binding.spinnerExit.setAdapter(adapterSpinner);
+        binding.spinnerExit.setPrompt(getString(R.string.choose_action));
+        binding.spinnerExit.setSelection(2, true);
         addOrRemoveNewView(2);
-        spinnerExit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.spinnerExit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
@@ -373,7 +366,7 @@ public class PlaceActivity extends AppCompatActivity {
                 checkPermission(position);
                 snackbarCreate(position);
 
-                if (position != 0 & !(spinner.getSelectedItemPosition() == 0)) {
+                if (position != 0 & !(binding.spinner.getSelectedItemPosition() == 0)) {
                     if (snackbarPermission.isShown()) {
                         snackbarPermission.dismiss();
                     } else if (snackbarSettings.isShown()) {
@@ -381,7 +374,7 @@ public class PlaceActivity extends AppCompatActivity {
                     }
                 }
 
-                if (position != 1 & !(spinner.getSelectedItemPosition() == 1)) {
+                if (position != 1 & !(binding.spinner.getSelectedItemPosition() == 1)) {
                     if (snackbarPermission.isShown()) {
                         snackbarPermission.dismiss();
                     } else if (snackbarSettings.isShown()) {
@@ -389,12 +382,12 @@ public class PlaceActivity extends AppCompatActivity {
                     }
                 }
 
-                if (position != 3 & !(spinner.getSelectedItemPosition() == 3 || spinner.getSelectedItemPosition() == 4)) {
+                if (position != 3 & !(binding.spinner.getSelectedItemPosition() == 3 || binding.spinner.getSelectedItemPosition() == 4)) {
                     if (snackbarDND.isShown()) {
                         snackbarDND.dismiss();
                     }
                 }
-                if (position != 4 & !(spinner.getSelectedItemPosition() == 3 || spinner.getSelectedItemPosition() == 4)) {
+                if (position != 4 & !(binding.spinner.getSelectedItemPosition() == 3 || binding.spinner.getSelectedItemPosition() == 4)) {
                     if (snackbarDND.isShown()) {
                         snackbarDND.dismiss();
                     }
@@ -407,8 +400,8 @@ public class PlaceActivity extends AppCompatActivity {
         });
 
 
-        delButton = findViewById(R.id.deleteButton);
-        saveButton = findViewById(R.id.saveButton);
+//        deleteButton = findViewById(R.id.deleteButton);
+//        saveButton = findViewById(R.id.saveButton);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -423,60 +416,60 @@ public class PlaceActivity extends AppCompatActivity {
 
         if (placeId > 0) { // если 0, то добавление
             Place place = mPlaceViewModel.getPlace(placeId);
-            nameBox.setText(place.getName());
-            conditionBox.setValue(place.getCondition());
+            binding.nameBox.setText(place.getName());
+            binding.conditionBox.setValue(place.getCondition());
             Pattern patternGEO = Pattern.compile("^(\\-?\\d+(\\.\\d+)?),\\s*(\\-?\\d+(\\.\\d+)?)$");
             Matcher geoMatcher = patternGEO.matcher(place.getAddress());
             if (!geoMatcher.matches()) {
-                addressBox.setText(place.getAddress());
+                binding.addressBox.setText(place.getAddress());
                 addressFromDB = place.getAddress();
-                if (!addressBox.isEnabled()) {
-                    addressBox.setEnabled(true);
+                if (!binding.addressBox.isEnabled()) {
+                    binding.addressBox.setEnabled(true);
                 }
             } else {
                 //linearLayout.removeView(addressLayout);
                 //linearLayout.removeView(btnGoogleMap);
                 //((RelativeLayout.LayoutParams) radiusBox.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.nameBoxInput);
-                addressBox.setText(round(place.getLatitude(), 5) + ", " + round(place.getLongitude(), 5));
-                if (addressBox.isEnabled()) {
-                    addressBox.setEnabled(false);
+                binding.addressBox.setText(round(place.getLatitude(), 5) + ", " + round(place.getLongitude(), 5));
+                if (binding.addressBox.isEnabled()) {
+                    binding.addressBox.setEnabled(false);
                 }
             }
 
             if (place.getCheckboxEnter() == 1) {
-                entering.setChecked(true);
-                spinner.setSelection(place.getPosition(), true);
+                binding.entering.setChecked(true);
+                binding.spinner.setSelection(place.getPosition(), true);
                 addOrRemoveView(place.getPosition());
 
-                if (findViewById(R.id.txtInputLnumber) != null) {
-                    number.setText(place.getNumber());
+                if (findViewById(R.id.numberBoxInput) != null) {
+                    binding.number.setText(place.getNumber());
                 }
-                if (findViewById(R.id.txtInputLsms) != null) {
-                    sms.setText(place.getSms());
+                if (findViewById(R.id.smsBoxInput) != null) {
+                    binding.sms.setText(place.getSms());
                 }
             } else if (place.getCheckboxEnter() == 0) {
-                entering.setChecked(false);
+                binding.entering.setChecked(false);
             }
 
             if (place.getCheckboxExit() == 1) {
-                exiting.setChecked(true);
-                spinnerExit.setSelection(place.getPositionExit(), true);
+                binding.exiting.setChecked(true);
+                binding.spinnerExit.setSelection(place.getPositionExit(), true);
                 addOrRemoveNewView(place.getPositionExit());
-                if (findViewById(R.id.textInputLayoutNum) != null) {
-                    numberExit.setText(place.getNumberExit());
+                if (findViewById(R.id.numberExitBoxInput) != null) {
+                    binding.numberExit.setText(place.getNumberExit());
                 }
-                if (findViewById(R.id.textInputLayoutSms) != null) {
-                    smsExit.setText(place.getSmsExit());
+                if (findViewById(R.id.smsExitBoxInput) != null) {
+                    binding.smsExit.setText(place.getSmsExit());
                 }
             } else if (place.getCheckboxExit() == 0) {
-                exiting.setChecked(false);
+                binding.exiting.setChecked(false);
             }
             lat = place.getLatitude();
             lng = place.getLongitude();
 
         } else {
-            entering.setChecked(false);
-            exiting.setChecked(false);
+            binding.entering.setChecked(false);
+            binding.exiting.setChecked(false);
             if (extras != null) {
                 if (fromMaps) {
                     if (addressFromMaps.equals("")) {
@@ -485,24 +478,24 @@ public class PlaceActivity extends AppCompatActivity {
                         //((RelativeLayout.LayoutParams) radiusBox.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.nameBoxInput);
                         lat = extras.getDouble("latFromMaps");
                         lng = extras.getDouble("lngFromMaps");
-                        addressBox.setText(round(lat, 5) + ", " + round(lng, 5));
-                        if (addressBox.isEnabled()) {
-                            addressBox.setEnabled(false);
+                        binding.addressBox.setText(round(lat, 5) + ", " + round(lng, 5));
+                        if (binding.addressBox.isEnabled()) {
+                            binding.addressBox.setEnabled(false);
                         }
 
                         //Log.i("mytag", "lat" + lat + " lng: " + lng);
                     } else {
-                        addressBox.setText(addressFromMaps);
+                        binding.addressBox.setText(addressFromMaps);
                         lat = extras.getDouble("latFromMaps");
                         lng = extras.getDouble("lngFromMaps");
-                        if (!addressBox.isEnabled()) {
-                            addressBox.setEnabled(true);
+                        if (!binding.addressBox.isEnabled()) {
+                            binding.addressBox.setEnabled(true);
                         }
                     }
                 }
             }
             // скрываем кнопку удаления
-            delButton.setVisibility(View.GONE);
+            binding.deleteButton.setVisibility(View.GONE);
         }
     }
 
@@ -516,71 +509,68 @@ public class PlaceActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        mToolbar = findViewById(R.id.toolbar_place);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(binding.toolbarPlace);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        binding.toolbarPlace.setTitleTextColor(getResources().getColor(android.R.color.white));
     }
-
 
     public void addOrRemoveView(int pos) {
         switch (pos) {
             case 0:
-                if (findViewById(R.id.txtInputLnumber) == null) {
-                    linearLayoutEntering.addView(numberBoxInput);
-                    linearLayoutEntering.addView(btnNumberEnter);
+                if (findViewById(R.id.numberBoxInput) == null) {
+                    binding.relativeLayoutEntering.addView(binding.numberBoxInput);
+                    binding.relativeLayoutEntering.addView(binding.btnNumberEnter);
                 }
-                if (findViewById(R.id.txtInputLsms) != null) {
-                    linearLayoutEntering.removeView(smsBoxInput);
+                if (findViewById(R.id.smsBoxInput) != null) {
+                    binding.relativeLayoutEntering.removeView(binding.smsBoxInput);
                 }
                 break;
             case 1:
-                if (findViewById(R.id.txtInputLnumber) == null) {
-                    linearLayoutEntering.addView(numberBoxInput);
-                    linearLayoutEntering.addView(btnNumberEnter);
+                if (findViewById(R.id.numberBoxInput) == null) {
+                    binding.relativeLayoutEntering.addView(binding.numberBoxInput);
+                    binding.relativeLayoutEntering.addView(binding.btnNumberEnter);
                 }
-                if (findViewById(R.id.txtInputLsms) == null) {
-                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.txtInputLnumber);
-                    linearLayoutEntering.addView(smsBoxInput);
-                    smsBoxInput.setCounterMaxLength(160);
-                    smsBoxInput.setHint(getString(R.string.input_sms));
+                if (findViewById(R.id.smsBoxInput) == null) {
+                    ((RelativeLayout.LayoutParams) binding.smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.numberBoxInput.getId());
+                    binding.relativeLayoutEntering.addView(binding.smsBoxInput);
+                    binding.smsBoxInput.setCounterMaxLength(160);
+                    binding.smsBoxInput.setHint(getString(R.string.input_sms));
                 } else {
-                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.txtInputLnumber);
-                    smsBoxInput.setCounterMaxLength(160);
-                    smsBoxInput.setHint(getString(R.string.input_sms));
+                    ((RelativeLayout.LayoutParams) binding.smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.numberBoxInput.getId());
+                    binding.smsBoxInput.setCounterMaxLength(160);
+                    binding.smsBoxInput.setHint(getString(R.string.input_sms));
                 }
                 break;
             case 3:
             case 4:
             case 5:
             case 6:
-                if (findViewById(R.id.txtInputLnumber) != null) {
-                    linearLayoutEntering.removeView(numberBoxInput);
-                    linearLayoutEntering.removeView(btnNumberEnter);
-
+                if (findViewById(R.id.numberBoxInput) != null) {
+                    binding.relativeLayoutEntering.removeView(binding.numberBoxInput);
+                    binding.relativeLayoutEntering.removeView(binding.btnNumberEnter);
                 }
-                if (findViewById(R.id.txtInputLsms) != null) {
-                    linearLayoutEntering.removeView(smsBoxInput);
+                if (findViewById(R.id.smsBoxInput) != null) {
+                    binding.relativeLayoutEntering.removeView(binding.smsBoxInput);
                 }
                 break;
             case 2:
-                if (findViewById(R.id.txtInputLnumber) != null) {
-                    linearLayoutEntering.removeView(numberBoxInput);
-                    linearLayoutEntering.removeView(btnNumberEnter);
+                if (findViewById(R.id.numberBoxInput) != null) {
+                    binding.relativeLayoutEntering.removeView(binding.numberBoxInput);
+                    binding.relativeLayoutEntering.removeView(binding.btnNumberEnter);
                 }
-                if (findViewById(R.id.txtInputLsms) == null) {
-                    linearLayoutEntering.addView(smsBoxInput);
-                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinner);
-                    smsBoxInput.setCounterMaxLength(300);
-                    smsBoxInput.setHint(getString(R.string.input_notification));
+                if (findViewById(R.id.smsBoxInput) == null) {
+                    binding.relativeLayoutEntering.addView(binding.smsBoxInput);
+                    ((RelativeLayout.LayoutParams) binding.smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.spinner.getId());
+                    binding.smsBoxInput.setCounterMaxLength(300);
+                    binding.smsBoxInput.setHint(getString(R.string.input_notification));
                 } else {
-                    ((RelativeLayout.LayoutParams) smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinner);
-                    smsBoxInput.setCounterMaxLength(300);
-                    smsBoxInput.setHint(getString(R.string.input_notification));
+                    ((RelativeLayout.LayoutParams) binding.smsBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.spinner.getId());
+                    binding.smsBoxInput.setCounterMaxLength(300);
+                    binding.smsBoxInput.setHint(getString(R.string.input_notification));
                 }
                 break;
 
@@ -590,59 +580,58 @@ public class PlaceActivity extends AppCompatActivity {
     public void addOrRemoveNewView(int pos) {
         switch (pos) {
             case 0:
-                if (findViewById(R.id.textInputLayoutNum) == null) {
-                    linearLayoutExit.addView(numberExitBoxInput);
-                    linearLayoutExit.addView(btnNumberExit);
+                if (findViewById(R.id.numberExitBoxInput) == null) {
+                    binding.relativeLayoutExiting.addView(binding.numberExitBoxInput);
+                    binding.relativeLayoutExiting.addView(binding.btnNumberExit);
                 }
-                if (findViewById(R.id.textInputLayoutSms) != null) {
-                    linearLayoutExit.removeView(smsExitBoxInput);
+                if (findViewById(R.id.smsExitBoxInput) != null) {
+                    binding.relativeLayoutExiting.removeView(binding.smsExitBoxInput);
                 }
                 break;
             case 1:
-                if (findViewById(R.id.textInputLayoutNum) == null) {
-                    linearLayoutExit.addView(numberExitBoxInput);
-                    linearLayoutExit.addView(btnNumberExit);
+                if (findViewById(R.id.numberExitBoxInput) == null) {
+                    binding.relativeLayoutExiting.addView(binding.numberExitBoxInput);
+                    binding.relativeLayoutExiting.addView(binding.btnNumberExit);
                 }
-                if (findViewById(R.id.textInputLayoutSms) == null) {
-                    linearLayoutExit.addView(smsExitBoxInput);
-                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.textInputLayoutNum);
-                    smsExitBoxInput.setCounterMaxLength(160);
-                    smsExitBoxInput.setHint(getString(R.string.input_sms));
+                if (findViewById(R.id.smsExitBoxInput) == null) {
+                    binding.relativeLayoutExiting.addView(binding.smsExitBoxInput);
+                    ((RelativeLayout.LayoutParams) binding.smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.numberExitBoxInput.getId());
+                    binding.smsExitBoxInput.setCounterMaxLength(160);
+                    binding.smsExitBoxInput.setHint(getString(R.string.input_sms));
                 } else {
-                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.textInputLayoutNum);
-                    smsExitBoxInput.setCounterMaxLength(160);
-                    smsExitBoxInput.setHint(getString(R.string.input_sms));
+                    ((RelativeLayout.LayoutParams) binding.smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.numberExitBoxInput.getId());
+                    binding.smsExitBoxInput.setCounterMaxLength(160);
+                    binding.smsExitBoxInput.setHint(getString(R.string.input_sms));
                 }
                 break;
             case 3:
             case 4:
             case 5:
             case 6:
-                if (findViewById(R.id.textInputLayoutNum) != null) {
-                    linearLayoutExit.removeView(numberExitBoxInput);
-                    linearLayoutExit.removeView(btnNumberExit);
+                if (findViewById(R.id.numberExitBoxInput) != null) {
+                    binding.relativeLayoutExiting.removeView(binding.numberExitBoxInput);
+                    binding.relativeLayoutExiting.removeView(binding.btnNumberExit);
                 }
-                if (findViewById(R.id.textInputLayoutSms) != null) {
-                    linearLayoutExit.removeView(smsExitBoxInput);
+                if (findViewById(R.id.smsExitBoxInput) != null) {
+                    binding.relativeLayoutExiting.removeView(binding.smsExitBoxInput);
                 }
                 break;
             case 2:
-                if (findViewById(R.id.textInputLayoutNum) != null) {
-                    linearLayoutExit.removeView(numberExitBoxInput);
-                    linearLayoutExit.removeView(btnNumberExit);
+                if (findViewById(R.id.numberExitBoxInput) != null) {
+                    binding.relativeLayoutExiting.removeView(binding.numberExitBoxInput);
+                    binding.relativeLayoutExiting.removeView(binding.btnNumberExit);
                 }
-                if (findViewById(R.id.textInputLayoutSms) == null) {
-                    linearLayoutExit.addView(smsExitBoxInput);
-                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinnerExit);
-                    smsExitBoxInput.setCounterMaxLength(300);
-                    smsExitBoxInput.setHint(getString(R.string.input_notification));
+                if (findViewById(R.id.smsExitBoxInput) == null) {
+                    binding.relativeLayoutExiting.addView(binding.smsExitBoxInput);
+                    ((RelativeLayout.LayoutParams) binding.smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.spinnerExit.getId());
+                    binding.smsExitBoxInput.setCounterMaxLength(300);
+                    binding.smsExitBoxInput.setHint(getString(R.string.input_notification));
                 } else {
-                    ((RelativeLayout.LayoutParams) smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.spinnerExit);
-                    smsExitBoxInput.setCounterMaxLength(300);
-                    smsExitBoxInput.setHint(getString(R.string.input_notification));
+                    ((RelativeLayout.LayoutParams) binding.smsExitBoxInput.getLayoutParams()).addRule(RelativeLayout.BELOW, binding.spinnerExit.getId());
+                    binding.smsExitBoxInput.setCounterMaxLength(300);
+                    binding.smsExitBoxInput.setHint(getString(R.string.input_notification));
                 }
                 break;
-
         }
     }
 
@@ -673,11 +662,11 @@ public class PlaceActivity extends AppCompatActivity {
         if (setValidation()) {
             try {
                 int checkBoxEnter, checkBoxExit;
-                if (entering.isChecked()) {
+                if (binding.entering.isChecked()) {
                     checkBoxEnter = 1;
                 } else checkBoxEnter = 0;
 
-                if (exiting.isChecked()) {
+                if (binding.exiting.isChecked()) {
                     checkBoxExit = 1;
                 } else checkBoxExit = 0;
                 String namePlace;
@@ -689,8 +678,8 @@ public class PlaceActivity extends AppCompatActivity {
                 String msgExit;
                 Address addressName;
                 //double latitude, longitude;
-                if (addressBox.isEnabled()) {
-                    addressEdit = addressBox.getText().toString().trim();
+                if (binding.addressBox.isEnabled()) {
+                    addressEdit = binding.addressBox.getText().toString().trim();
                     Log.d(TAG, "АДРЕС: " + addressEdit);
                     addresses = geocoder.getFromLocationName(addressEdit, 5);
                     if (addresses == null || addresses.size() == 0) {
@@ -711,20 +700,20 @@ public class PlaceActivity extends AppCompatActivity {
                             }
                         }
 
-                        namePlace = nameBox.getText().toString().trim();
-                        condition = (int) conditionBox.getValue();
-                        phone = number.getText().toString().trim();
-                        msg = sms.getText().toString().trim();
-                        int position = spinner.getSelectedItemPosition();
-                        int positionExit = spinnerExit.getSelectedItemPosition();
-                        phoneExit = numberExit.getText().toString().trim();
-                        msgExit = smsExit.getText().toString().trim();
+                        namePlace = binding.nameBox.getText().toString().trim();
+                        condition = (int) binding.conditionBox.getValue();
+                        phone = binding.number.getText().toString().trim();
+                        msg = binding.sms.getText().toString().trim();
+                        int position = binding.spinner.getSelectedItemPosition();
+                        int positionExit = binding.spinnerExit.getSelectedItemPosition();
+                        phoneExit = binding.numberExit.getText().toString().trim();
+                        msgExit = binding.smsExit.getText().toString().trim();
                         addressName = address;
                         if (!fromMaps) {
                             if (lat == 0.0 & lng == 0.0) {
                                 lat = addressName.getLatitude();
                                 lng = addressName.getLongitude();
-                            } else if (!addressFromDB.equalsIgnoreCase(addressBox.getText().toString())) {
+                            } else if (!addressFromDB.equalsIgnoreCase(binding.addressBox.getText().toString())) {
                                 lat = addressName.getLatitude();
                                 lng = addressName.getLongitude();
                             }
@@ -743,14 +732,14 @@ public class PlaceActivity extends AppCompatActivity {
                     }
                 } else {
                     addressEdit = round(lat, 5) + ",\n" + round(lng, 5);
-                    namePlace = nameBox.getText().toString().trim();
-                    condition = (int) conditionBox.getValue();
-                    phone = number.getText().toString().trim();
-                    msg = sms.getText().toString().trim();
-                    int position = spinner.getSelectedItemPosition();
-                    int positionExit = spinnerExit.getSelectedItemPosition();
-                    phoneExit = numberExit.getText().toString().trim();
-                    msgExit = smsExit.getText().toString().trim();
+                    namePlace = binding.nameBox.getText().toString().trim();
+                    condition = (int) binding.conditionBox.getValue();
+                    phone = binding.number.getText().toString().trim();
+                    msg = binding.sms.getText().toString().trim();
+                    int position = binding.spinner.getSelectedItemPosition();
+                    int positionExit = binding.spinnerExit.getSelectedItemPosition();
+                    phoneExit = binding.numberExit.getText().toString().trim();
+                    msgExit = binding.smsExit.getText().toString().trim();
                     Place place = new Place(placeId, namePlace, addressEdit, condition, lat, lng, checkBoxEnter, position, phone, msg, checkBoxExit, positionExit, phoneExit, msgExit);
                     if (placeId > 0) {
                         place.setActivation(1);
@@ -780,82 +769,82 @@ public class PlaceActivity extends AppCompatActivity {
         boolean nameValid, addressValid,
                 numberValid, smsValid, numberExitValid, smsExitValid;
 
-        if (nameBox.getText().toString().trim().length() == 0) {
-            nameBoxInput.setError("Введите название места!");
+        if (binding.nameBox.getText().toString().trim().length() == 0) {
+            binding.nameBoxInput.setError("Введите название места!");
             nameValid = false;
-        } else if (nameBox.getText().toString().trim().length() > 25) {
-            nameBoxInput.setError("Слишком длинное название!");
+        } else if (binding.nameBox.getText().toString().trim().length() > 25) {
+            binding.nameBoxInput.setError("Слишком длинное название!");
             nameValid = false;
         } else {
-            nameBoxInput.setErrorEnabled(false);
+            binding.nameBoxInput.setErrorEnabled(false);
             nameValid = true;
         }
 
 
-        if (findViewById(R.id.addressBox) != null & addressBox.getText().toString().equals("")) {
-            addressBoxInput.setError("Введите адрес!");
+        if (findViewById(R.id.addressBox) != null & binding.addressBox.getText().toString().equals("")) {
+            binding.addressBoxInput.setError("Введите адрес!");
             addressValid = false;
         } else {
-            addressBoxInput.setErrorEnabled(false);
+            binding.addressBoxInput.setErrorEnabled(false);
             addressValid = true;
         }
 
-        if (findViewById(R.id.txtInputLnumber) != null & number.getText().toString().equals("")) {
-            numberBoxInput.setError("Введите номер!");
+        if (findViewById(R.id.numberBoxInput) != null & binding.number.getText().toString().equals("")) {
+            binding.numberBoxInput.setError("Введите номер!");
             numberValid = false;
-        } else if (findViewById(R.id.txtInputLnumber) != null & !validatePhoneNumber(number.getText().toString())) {
-            numberBoxInput.setError("Номер введён неправильно!");
+        } else if (findViewById(R.id.numberBoxInput) != null & !validatePhoneNumber(binding.number.getText().toString())) {
+            binding.numberBoxInput.setError("Номер введён неправильно!");
             numberValid = false;
 
         } else {
-            numberBoxInput.setErrorEnabled(false);
+            binding.numberBoxInput.setErrorEnabled(false);
             numberValid = true;
         }
 
 
-        if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 1 & sms.getText().toString().equals("")) {
-            smsBoxInput.setError("Введите ваше сообщение!");
+        if (findViewById(R.id.smsBoxInput) != null & binding.spinner.getSelectedItemPosition() == 1 & binding.sms.getText().toString().equals("")) {
+            binding.smsBoxInput.setError("Введите ваше сообщение!");
             smsValid = false;
-        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 2 & sms.getText().toString().equals("")) {
-            smsBoxInput.setError("Введите ваше уведомление!");
+        } else if (findViewById(R.id.smsBoxInput) != null & binding.spinner.getSelectedItemPosition() == 2 & binding.sms.getText().toString().equals("")) {
+            binding.smsBoxInput.setError("Введите ваше уведомление!");
             smsValid = false;
-        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 2 & sms.getText().length() > 300) {
-            smsBoxInput.setError("Слишком длинное уведомление!");
+        } else if (findViewById(R.id.smsBoxInput) != null & binding.spinner.getSelectedItemPosition() == 2 & binding.sms.getText().length() > 300) {
+            binding.smsBoxInput.setError("Слишком длинное уведомление!");
             smsValid = false;
-        } else if (findViewById(R.id.txtInputLsms) != null & spinner.getSelectedItemPosition() == 1 & sms.getText().length() > 160) {
-            smsBoxInput.setError("Слишком длинное сообщение!");
+        } else if (findViewById(R.id.smsBoxInput) != null & binding.spinner.getSelectedItemPosition() == 1 & binding.sms.getText().length() > 160) {
+            binding.smsBoxInput.setError("Слишком длинное сообщение!");
             smsValid = false;
         } else {
-            smsBoxInput.setErrorEnabled(false);
+            binding.smsBoxInput.setErrorEnabled(false);
             smsValid = true;
         }
 
 
-        if (findViewById(R.id.textInputLayoutNum) != null & numberExit.getText().toString().equals("")) {
-            numberExitBoxInput.setError("Введите номер!");
+        if (findViewById(R.id.numberExitBoxInput) != null &  binding.numberExit.getText().toString().equals("")) {
+            binding.numberExitBoxInput.setError("Введите номер!");
             numberExitValid = false;
-        } else if (findViewById(R.id.textInputLayoutNum) != null & !validatePhoneNumber(numberExit.getText().toString())) {
-            numberExitBoxInput.setError("Номер введён неправильно!");
+        } else if (findViewById(R.id.numberExitBoxInput) != null & !validatePhoneNumber(binding.numberExit.getText().toString())) {
+            binding.numberExitBoxInput.setError("Номер введён неправильно!");
             numberExitValid = false;
         } else {
-            numberExitBoxInput.setErrorEnabled(false);
+            binding.numberExitBoxInput.setErrorEnabled(false);
             numberExitValid = true;
         }
 
-        if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 1 & smsExit.getText().toString().equals("")) {
-            smsExitBoxInput.setError("Введите ваше сообщение!");
+        if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 1 &  binding.smsExit.getText().toString().equals("")) {
+            binding.smsExitBoxInput.setError("Введите ваше сообщение!");
             smsExitValid = false;
-        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 2 & smsExit.getText().toString().equals("")) {
-            smsExitBoxInput.setError("Введите ваше уведомление!");
+        } else if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 2 &  binding.smsExit.getText().toString().equals("")) {
+            binding.smsExitBoxInput.setError("Введите ваше уведомление!");
             smsExitValid = false;
-        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 2 & smsExit.getText().length() > 300) {
-            smsExitBoxInput.setError("Слишком длинное уведомление!");
+        } else if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 2 &  binding.smsExit.getText().length() > 300) {
+            binding.smsExitBoxInput.setError("Слишком длинное уведомление!");
             smsExitValid = false;
-        } else if (findViewById(R.id.textInputLayoutSms) != null & spinnerExit.getSelectedItemPosition() == 1 & smsExit.getText().length() > 160) {
-            smsExitBoxInput.setError("Слишком длинное сообщение!");
+        } else if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 1 &  binding.smsExit.getText().length() > 160) {
+            binding.smsExitBoxInput.setError("Слишком длинное сообщение!");
             smsExitValid = false;
         } else {
-            smsExitBoxInput.setErrorEnabled(false);
+            binding.smsExitBoxInput.setErrorEnabled(false);
             smsExitValid = true;
         }
 
@@ -867,10 +856,10 @@ public class PlaceActivity extends AppCompatActivity {
         //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(FROM_ACTIVITY_PLACE, true);
         Pattern patternGEO = Pattern.compile("^(\\-?\\d+(\\.\\d+)?),\\s*(\\-?\\d+(\\.\\d+)?)$");
-        Matcher geoMatcher = patternGEO.matcher(addressBox.getText().toString());
-        if (!addressBox.getText().toString().equals("") && !addressFromDB.equalsIgnoreCase(addressBox.getText().toString()) && !geoMatcher.matches()) {
+        Matcher geoMatcher = patternGEO.matcher(binding.addressBox.getText().toString());
+        if (!binding.addressBox.getText().toString().equals("") && !addressFromDB.equalsIgnoreCase(binding.addressBox.getText().toString()) && !geoMatcher.matches()) {
             try {
-                String addressEdit = addressBox.getText().toString().trim();
+                String addressEdit = binding.addressBox.getText().toString().trim();
                 Log.d(TAG, "АДРЕС: " + addressEdit);
                 addresses = geocoder.getFromLocationName(addressEdit, 5);
                 if (addresses == null || addresses.size() == 0) {
@@ -942,16 +931,16 @@ public class PlaceActivity extends AppCompatActivity {
                         //((RelativeLayout.LayoutParams) radiusBox.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.nameBoxInput);
                         lat = i.getDoubleExtra(LATITUDE_FROM_MAPS, 0.0);
                         lng = i.getDoubleExtra(LONGITUDE_FROM_MAPS, 0.0);
-                        addressBox.setText(round(lat, 5) + ", " + round(lng, 5));
-                        if (addressBox.isEnabled()) {
-                            addressBox.setEnabled(false);
+                        binding.addressBox.setText(round(lat, 5) + ", " + round(lng, 5));
+                        if (binding.addressBox.isEnabled()) {
+                            binding.addressBox.setEnabled(false);
                         }
                     } else {
-                        addressBox.setText(addressFromMaps);
+                        binding.addressBox.setText(addressFromMaps);
                         lat = i.getDoubleExtra(LATITUDE_FROM_MAPS, 0.0);
                         lng = i.getDoubleExtra(LONGITUDE_FROM_MAPS, 0.0);
-                        if (!addressBox.isEnabled()) {
-                            addressBox.setEnabled(true);
+                        if (!binding.addressBox.isEnabled()) {
+                            binding.addressBox.setEnabled(true);
                         }
                     }
                 }
@@ -964,7 +953,7 @@ public class PlaceActivity extends AppCompatActivity {
                         loader = new CursorLoader(this, contactsData, null, null, null, null);
                         Cursor c = loader.loadInBackground();
                         if (c != null && c.moveToFirst()) {
-                            number.setText(c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                            binding.number.setText(c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                         }
                     }
                 }
@@ -977,7 +966,7 @@ public class PlaceActivity extends AppCompatActivity {
                         loader = new CursorLoader(this, contactsData, null, null, null, null);
                         Cursor c = loader.loadInBackground();
                         if (c != null && c.moveToFirst()) {
-                            numberExit.setText(c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                            binding.numberExit.setText(c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                         }
                     }
                 }
@@ -1015,16 +1004,16 @@ public class PlaceActivity extends AppCompatActivity {
         boolean showRationaleSMS;
         boolean showRationaleRead;
         if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
-            if (entering.isChecked() & (spinner.getSelectedItemPosition() == 3 || spinner.getSelectedItemPosition() == 4)) {
+            if (binding.entering.isChecked() & (spinner.getSelectedItemPosition() == 3 || binding.spinner.getSelectedItemPosition() == 4)) {
                 grantResult(true, null, posEnter, mNotificationManager.isNotificationPolicyAccessGranted());
             }
-            if (exiting.isChecked() & (spinnerExit.getSelectedItemPosition() == 3 || spinnerExit.getSelectedItemPosition() == 4)) {
+            if (binding.exiting.isChecked() & (spinnerExit.getSelectedItemPosition() == 3 || binding.spinnerExit.getSelectedItemPosition() == 4)) {
                 grantResult(true, null, posExit, mNotificationManager.isNotificationPolicyAccessGranted());
             }
         }
 
 
-        if (entering.isChecked() & spinner.getSelectedItemPosition() == 0) {
+        if (binding.entering.isChecked() & binding.spinner.getSelectedItemPosition() == 0) {
             if (!permissionCall || !permissionSMS || !permissionReadContacts) {
                 showRationaleCall = shouldShowRequestPermissionRationale("android.permission.CALL_PHONE");
                 showRationaleRead = shouldShowRequestPermissionRationale("android.permission.READ_CONTACTS");
@@ -1038,7 +1027,7 @@ public class PlaceActivity extends AppCompatActivity {
             }
         }
 
-        if (entering.isChecked() & spinner.getSelectedItemPosition() == 1) {
+        if (binding.entering.isChecked() & binding.spinner.getSelectedItemPosition() == 1) {
             if (!permissionCall || !permissionSMS || !permissionReadContacts) {
                 showRationaleSMS = shouldShowRequestPermissionRationale("android.permission.SEND_SMS");
                 showRationaleRead = shouldShowRequestPermissionRationale("android.permission.READ_CONTACTS");
@@ -1053,7 +1042,7 @@ public class PlaceActivity extends AppCompatActivity {
             }
         }
 
-        if (exiting.isChecked() & (spinnerExit.getSelectedItemPosition() == 0)) {
+        if (binding.exiting.isChecked() & (binding.spinnerExit.getSelectedItemPosition() == 0)) {
             if (!permissionCall || !permissionReadContacts) {
                 showRationaleCall = shouldShowRequestPermissionRationale("android.permission.CALL_PHONE");
                 showRationaleRead = shouldShowRequestPermissionRationale("android.permission.READ_CONTACTS");
@@ -1068,7 +1057,7 @@ public class PlaceActivity extends AppCompatActivity {
             }
         }
 
-        if (exiting.isChecked() & (spinnerExit.getSelectedItemPosition() == 1)) {
+        if (binding.exiting.isChecked() & (binding.spinnerExit.getSelectedItemPosition() == 1)) {
             if (!permissionSMS || !permissionReadContacts) {
                 showRationaleSMS = shouldShowRequestPermissionRationale("android.permission.SEND_SMS");
                 showRationaleRead = shouldShowRequestPermissionRationale("android.permission.READ_CONTACTS");
@@ -1095,7 +1084,7 @@ public class PlaceActivity extends AppCompatActivity {
     };
 
     public void snackbarCreate(final int pos) {
-        snackbarPermission = Snackbar.make(findViewById(R.id.activity_place),
+        snackbarPermission = Snackbar.make(binding.activityPlace,
                 R.string.access_permissions,
                 Snackbar.LENGTH_INDEFINITE).setAction(R.string.turn_on,
                 new View.OnClickListener() {
