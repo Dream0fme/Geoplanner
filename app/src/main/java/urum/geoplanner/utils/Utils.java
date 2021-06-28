@@ -2,6 +2,8 @@ package urum.geoplanner.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.view.View;
@@ -15,8 +17,12 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -102,5 +108,68 @@ public class Utils {
             return location;
         }
         return location;
+    }
+
+    public static ArrayList<String> getAddressInfo(String locationName, Context context) {
+        ArrayList<String> list = new ArrayList<>();
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            List<Address> a = geocoder.getFromLocationName(locationName.trim(), 1);
+            for (int i = 0; i < a.size(); i++) {
+                String city = a.get(i).getLocality();
+                String street = a.get(i).getThoroughfare();
+                String future = a.get(i).getFeatureName();
+                if (city != null) {
+                    list.add(city);
+                }
+                if (city != null & street != null) {
+                    list.clear();
+                    String[] subStr;
+                    subStr = locationName.split("\\s|,");
+                    for (int j = 0; j < subStr.length; j++) {
+                        if (startsWithIgnoreCase(street, subStr[j]) || containsIgnoreCase(future, subStr[j]) || containsIgnoreCase(street, subStr[j])) {
+                            list.add(city + "," + " " + street);
+                        } else list.clear();
+                    }
+                }
+
+                if (city != null & future != null) {
+                    list.clear();
+                    String[] subStr;
+                    subStr = locationName.split("\\s|,");
+                    for (int j = 0; j < subStr.length; j++) {
+                        if (startsWithIgnoreCase(future, subStr[j]) || containsIgnoreCase(future, subStr[j])) {
+                            if (!city.equalsIgnoreCase(future)) {
+                                list.clear();
+                                list.add(city + ", " + future);
+                            } else if (subStr.length < 2) {
+                                list.clear();
+                                list.add(city);
+                            }
+                        } else list.clear();
+                    }
+                }
+                if (city != null & street != null & future != null) {
+                    list.clear();
+                    String[] subStr;
+                    subStr = locationName.split("\\s|,");
+                    for (int j = 0; j < subStr.length; j++) {
+                        if (startsWithIgnoreCase(street, subStr[j])) {
+                            if (!street.equalsIgnoreCase(future)) {
+                                list.clear();
+                                list.add(city + "," + " " + street + ", " + future);
+                            } else {
+                                list.clear();
+                                list.add(city + "," + " " + street);
+                            }
+                        } else list.clear();
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
