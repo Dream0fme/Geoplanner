@@ -828,9 +828,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         Bundle extras = getArguments();
         if (extras != null) {
-
-            LatLng position = extras.getParcelable("lastPosition");
-            Log.d(TAG, position.toString());
             fromActivityPlace = extras.getBoolean(FROM_ACTIVITY_PLACE);
             lat = extras.getDouble(LATITUDE_FROM_PLACEACTIVITY);
             lng = extras.getDouble(LONGITUDE_FROM_PLACEACTIVITY);
