@@ -5,17 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import urum.geoplanner.databinding.ActivityHomeBinding;
 import urum.geoplanner.service.ConnectorService;
+import urum.geoplanner.service.LastLocationListener;
+
+import static urum.geoplanner.utils.Utils.getLastLocation;
 
 
 public class ActivityHome extends AppCompatActivity {
     int SPLASH_TIME;
     int SPLASH_TIME_MIN = 1200;
     int SPLASH_TIME_MAX = 3000;
+    ProgressBar splashProgress;
 
     ActivityHomeBinding binding;
 
@@ -33,6 +40,8 @@ public class ActivityHome extends AppCompatActivity {
         ConnectorService connectorService = new ConnectorService(this);
         getLifecycle().addObserver(connectorService);
 
+        LatLng lastLocation = getLastLocation(this);
+        LastLocationListener.getInstance(lastLocation, this);
 
         new Handler().postDelayed(new Runnable() {
             @Override
