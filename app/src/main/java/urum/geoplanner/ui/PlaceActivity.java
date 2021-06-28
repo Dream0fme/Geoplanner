@@ -22,27 +22,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.content.CursorLoader;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.LabelFormatter;
-import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.List;
@@ -63,36 +54,11 @@ import static urum.geoplanner.utils.Utils.round;
 
 @SuppressLint("NewApi")
 public class PlaceActivity extends AppCompatActivity {
-
-
     private String PACKAGE_NAME;
     Geocoder geocoder;
     List<Address> addresses;
 
     String errorMessage;
-
-    CheckBox entering, exiting;
-
-    TextInputEditText nameBox;
-    AutoCompleteTextView addressBox;
-    TextInputEditText number, numberExit;
-    TextInputEditText sms, smsExit;
-
-    Button deleteButton;
-    Button saveButton;
-    MaterialButton btnGoogleMap, btnNumberEnter, btnNumberExit;
-
-    Spinner spinner, spinnerExit;
-
-    RelativeLayout relativeLayoutMain, relativeLayoutEntering, relativeLayoutExiting;
-
-    TextInputLayout nameBoxInput;
-    TextInputLayout addressBoxInput;
-    TextInputLayout numberBoxInput, numberExitBoxInput;
-    TextInputLayout smsBoxInput, smsExitBoxInput;
-
-    Slider conditionBox;
-
 
     long placeId = 0;
     double lat = 0.0;
@@ -108,13 +74,12 @@ public class PlaceActivity extends AppCompatActivity {
     Snackbar snackbarDND;
     Snackbar snackbarSettings;
     Snackbar snackbarPermission;
-    Toolbar mToolbar;
 
     private ConnectorService connectorService;
 
     private PlaceViewModel mPlaceViewModel;
 
-    ActivityPlaceBinding binding;
+    private ActivityPlaceBinding binding;
 
     @SuppressLint({"SimpleDateFormat", "SetTextI18n", "CutPasteId"})
     @Override
@@ -152,46 +117,20 @@ public class PlaceActivity extends AppCompatActivity {
 
         snackbarCreate(2);
 
-        //mPlaceViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(PlaceViewModel.class);
         mPlaceViewModel = new ViewModelProvider(this,
                 new ModelFactory(getApplication())).get(PlaceViewModel.class);
 
         registerReceiver(CloseReceiver, new IntentFilter(CLOSEAPPINTENTFILTER));
         mNotificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
 
-//        relativeLayoutMain = findViewById(R.id.relativeLayoutMain);
-//        btnGoogleMap = findViewById(R.id.googleMapBtn);
-//        btnNumberEnter = findViewById(R.id.searchNubmerEnter); // linLayoutEntering , linearLayoutEntering
-//        btnNumberExit = findViewById(R.id.searchNubmerExit); //linLayoutExit , linearLayoutExit
-
-        //nameBoxInput = findViewById(R.id.nameBoxInput);
-        //addressBoxInput = findViewById(R.id.addressBox);
-
-//        relativeLayoutEntering = findViewById(R.id.linLayoutEntering);
-//        relativeLayoutExiting = findViewById(R.id.linLayoutExit);
-//        numberBoxInput = findViewById(R.id.txtInputLnumber);
-//        smsBoxInput = findViewById(R.id.txtInputLsms);
-//        numberExitBoxInput = findViewById(R.id.textInputLayoutNum);
-//        smsExitBoxInput = findViewById(R.id.textInputLayoutSms);
-//        numberExit = findViewById(R.id.numberExit);
-//        smsExit = findViewById(R.id.editSmsExit);
 
         String[] actions = getResources().getStringArray(R.array.actions);
 
         geocoder = new Geocoder(this, Locale.getDefault());
         addresses = null;
-        //nameBox = findViewById(R.id.nameBox);
-//        addressBox = findViewById(R.id.address);
+
         binding.addressBox.setThreshold(1);
         binding.addressBox.setAdapter(new GeocoderAdapter(this, android.R.layout.simple_list_item_1));
-
-//        number = findViewById(R.id.number);
-//        sms = findViewById(R.id.editSMS);
-        //conditionBox = findViewById(R.id.condition);
-//        entering = findViewById(R.id.entering);
-//        exiting = findViewById(R.id.exiting);
-
-//        conditionBox = findViewById(R.id.radiusBox);
 
         binding.conditionBox.setLabelFormatter(new LabelFormatter() {
             @SuppressLint("DefaultLocale")
@@ -281,9 +220,9 @@ public class PlaceActivity extends AppCompatActivity {
                             snackbarDND.dismiss();
                         }
                     } else if (snackbarPermission.isShown()) {
-                        if (entering.isChecked() & !(spinner.getSelectedItemPosition() == 0 || spinner.getSelectedItemPosition() == 1)) {
+                        if (binding.entering.isChecked() & !(binding.spinner.getSelectedItemPosition() == 0 || binding.spinner.getSelectedItemPosition() == 1)) {
                             snackbarPermission.dismiss();
-                        } else if (!exiting.isChecked()) {
+                        } else if (!binding.exiting.isChecked()) {
                             snackbarPermission.dismiss();
                         }
                     } else if (snackbarSettings.isShown()) {
@@ -299,7 +238,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, actions);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner = findViewById(R.id.spinner);
+
         binding.spinner.setAdapter(adapterSpinner);
         binding.spinner.setPrompt(getString(R.string.choose_action));
         binding.spinner.setSelection(2, true);
@@ -317,17 +256,8 @@ public class PlaceActivity extends AppCompatActivity {
                         !(binding.spinnerExit.getSelectedItemPosition() == 0 || binding.spinnerExit.getSelectedItemPosition() == 1)) {
                     if (snackbarPermission.isShown()) {
                         snackbarPermission.dismiss();
-                        //checkPermission(position);
                     } else if (snackbarSettings.isShown()) {
                         snackbarSettings.dismiss();
-                        // checkPermission(position);
-                    }
-                }
-
-
-                if (position == 0 || position == 1) {
-                    if (!snackbarPermission.isShown() || !snackbarSettings.isShown()) {
-                        //checkPermission(position);
                     }
                 }
 
@@ -351,7 +281,6 @@ public class PlaceActivity extends AppCompatActivity {
             }
         });
 
-//        spinnerExit = findViewById(R.id.spinnerExit);
         binding.spinnerExit.setAdapter(adapterSpinner);
         binding.spinnerExit.setAdapter(adapterSpinner);
         binding.spinnerExit.setPrompt(getString(R.string.choose_action));
@@ -400,9 +329,6 @@ public class PlaceActivity extends AppCompatActivity {
         });
 
 
-//        deleteButton = findViewById(R.id.deleteButton);
-//        saveButton = findViewById(R.id.saveButton);
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.getBoolean(FROM_NOTIFICATION_TO_PLACEACTIVITY)) {
@@ -416,8 +342,9 @@ public class PlaceActivity extends AppCompatActivity {
 
         if (placeId > 0) { // если 0, то добавление
             Place place = mPlaceViewModel.getPlace(placeId);
-            binding.nameBox.setText(place.getName());
+            binding.setPlace(place);
             binding.conditionBox.setValue(place.getCondition());
+
             Pattern patternGEO = Pattern.compile("^(\\-?\\d+(\\.\\d+)?),\\s*(\\-?\\d+(\\.\\d+)?)$");
             Matcher geoMatcher = patternGEO.matcher(place.getAddress());
             if (!geoMatcher.matches()) {
@@ -427,9 +354,6 @@ public class PlaceActivity extends AppCompatActivity {
                     binding.addressBox.setEnabled(true);
                 }
             } else {
-                //linearLayout.removeView(addressLayout);
-                //linearLayout.removeView(btnGoogleMap);
-                //((RelativeLayout.LayoutParams) radiusBox.getLayoutParams()).addRule(RelativeLayout.BELOW, R.id.nameBoxInput);
                 binding.addressBox.setText(round(place.getLatitude(), 5) + ", " + round(place.getLongitude(), 5));
                 if (binding.addressBox.isEnabled()) {
                     binding.addressBox.setEnabled(false);
@@ -440,13 +364,6 @@ public class PlaceActivity extends AppCompatActivity {
                 binding.entering.setChecked(true);
                 binding.spinner.setSelection(place.getPosition(), true);
                 addOrRemoveView(place.getPosition());
-
-                if (findViewById(R.id.numberBoxInput) != null) {
-                    binding.number.setText(place.getNumber());
-                }
-                if (findViewById(R.id.smsBoxInput) != null) {
-                    binding.sms.setText(place.getSms());
-                }
             } else if (place.getCheckboxEnter() == 0) {
                 binding.entering.setChecked(false);
             }
@@ -455,12 +372,6 @@ public class PlaceActivity extends AppCompatActivity {
                 binding.exiting.setChecked(true);
                 binding.spinnerExit.setSelection(place.getPositionExit(), true);
                 addOrRemoveNewView(place.getPositionExit());
-                if (findViewById(R.id.numberExitBoxInput) != null) {
-                    binding.numberExit.setText(place.getNumberExit());
-                }
-                if (findViewById(R.id.smsExitBoxInput) != null) {
-                    binding.smsExit.setText(place.getSmsExit());
-                }
             } else if (place.getCheckboxExit() == 0) {
                 binding.exiting.setChecked(false);
             }
@@ -494,8 +405,6 @@ public class PlaceActivity extends AppCompatActivity {
                     }
                 }
             }
-            // скрываем кнопку удаления
-            binding.deleteButton.setVisibility(View.GONE);
         }
     }
 
@@ -820,7 +729,7 @@ public class PlaceActivity extends AppCompatActivity {
         }
 
 
-        if (findViewById(R.id.numberExitBoxInput) != null &  binding.numberExit.getText().toString().equals("")) {
+        if (findViewById(R.id.numberExitBoxInput) != null & binding.numberExit.getText().toString().equals("")) {
             binding.numberExitBoxInput.setError("Введите номер!");
             numberExitValid = false;
         } else if (findViewById(R.id.numberExitBoxInput) != null & !validatePhoneNumber(binding.numberExit.getText().toString())) {
@@ -831,16 +740,16 @@ public class PlaceActivity extends AppCompatActivity {
             numberExitValid = true;
         }
 
-        if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 1 &  binding.smsExit.getText().toString().equals("")) {
+        if (findViewById(R.id.smsExitBoxInput) != null & binding.spinnerExit.getSelectedItemPosition() == 1 & binding.smsExit.getText().toString().equals("")) {
             binding.smsExitBoxInput.setError("Введите ваше сообщение!");
             smsExitValid = false;
-        } else if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 2 &  binding.smsExit.getText().toString().equals("")) {
+        } else if (findViewById(R.id.smsExitBoxInput) != null & binding.spinnerExit.getSelectedItemPosition() == 2 & binding.smsExit.getText().toString().equals("")) {
             binding.smsExitBoxInput.setError("Введите ваше уведомление!");
             smsExitValid = false;
-        } else if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 2 &  binding.smsExit.getText().length() > 300) {
+        } else if (findViewById(R.id.smsExitBoxInput) != null & binding.spinnerExit.getSelectedItemPosition() == 2 & binding.smsExit.getText().length() > 300) {
             binding.smsExitBoxInput.setError("Слишком длинное уведомление!");
             smsExitValid = false;
-        } else if (findViewById(R.id.smsExitBoxInput) != null &  binding.spinnerExit.getSelectedItemPosition() == 1 &  binding.smsExit.getText().length() > 160) {
+        } else if (findViewById(R.id.smsExitBoxInput) != null & binding.spinnerExit.getSelectedItemPosition() == 1 & binding.smsExit.getText().length() > 160) {
             binding.smsExitBoxInput.setError("Слишком длинное сообщение!");
             smsExitValid = false;
         } else {
@@ -1004,10 +913,10 @@ public class PlaceActivity extends AppCompatActivity {
         boolean showRationaleSMS;
         boolean showRationaleRead;
         if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
-            if (binding.entering.isChecked() & (spinner.getSelectedItemPosition() == 3 || binding.spinner.getSelectedItemPosition() == 4)) {
+            if (binding.entering.isChecked() & (binding.spinner.getSelectedItemPosition() == 3 || binding.spinner.getSelectedItemPosition() == 4)) {
                 grantResult(true, null, posEnter, mNotificationManager.isNotificationPolicyAccessGranted());
             }
-            if (binding.exiting.isChecked() & (spinnerExit.getSelectedItemPosition() == 3 || binding.spinnerExit.getSelectedItemPosition() == 4)) {
+            if (binding.exiting.isChecked() & (binding.spinnerExit.getSelectedItemPosition() == 3 || binding.spinnerExit.getSelectedItemPosition() == 4)) {
                 grantResult(true, null, posExit, mNotificationManager.isNotificationPolicyAccessGranted());
             }
         }

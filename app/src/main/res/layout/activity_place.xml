@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
+        <variable
+            name="place"
+            type="urum.geoplanner.db.entities.Place" />
     </data>
 
     <LinearLayout
@@ -54,7 +58,8 @@
                         android:backgroundTint="#FFF"
                         android:hint="Введите название места"
                         android:maxLength="40"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:text='@{place != null ? place.name : ""}' />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -75,7 +80,8 @@
                         android:backgroundTint="#FFF"
                         android:hint="Введите адрес"
                         android:maxLength="120"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -97,23 +103,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/addressBoxInput"
-                    android:text="Установите радиус:"
-                    android:paddingTop="6dp"
                     android:layout_margin="2dp"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
+                    android:paddingTop="6dp"
+                    android:text="Установите радиус:"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
                 <com.google.android.material.slider.Slider
                     android:id="@+id/conditionBox"
-                    android:layout_marginTop="-20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radiusTextBox"
-                    app:labelBehavior="withinBounds"
-                    android:value="150.0"
+                    android:layout_marginTop="-20dp"
                     android:stepSize="5.0"
+                    android:value="150.0"
                     android:valueFrom="50.0"
-                    android:valueTo="500.0" />
+                    android:valueTo="500.0"
+                    app:labelBehavior="withinBounds" />
 
                 <CheckBox
                     android:id="@+id/entering"
@@ -163,7 +169,8 @@
                             android:hint="Введите номер"
                             android:inputType="phone"
                             android:maxLength="35"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:text='@{place != null ? place.number : ""}' />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
@@ -199,7 +206,8 @@
                             android:hint="Введите сообщение"
                             android:inputType="textMultiLine"
                             android:maxLength="320"
-                            android:maxLines="9" />
+                            android:maxLines="9"
+                            android:text='@{place != null ? place.sms : ""}' />
                     </com.google.android.material.textfield.TextInputLayout>
                 </RelativeLayout>
 
@@ -250,7 +258,8 @@
                             android:hint="Введите номер"
                             android:inputType="phone"
                             android:maxLength="35"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:text='@{place != null ? place.numberExit : ""}' />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
@@ -285,7 +294,8 @@
                             android:hint="Введите сообщение"
                             android:inputType="textMultiLine"
                             android:maxLength="320"
-                            android:maxLines="9" />
+                            android:maxLines="9"
+                            android:text='@{place != null ? place.smsExit : ""}' />
                     </com.google.android.material.textfield.TextInputLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -321,6 +331,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
                 android:onClick="delete"
+                android:visibility="@{place != null ? View.VISIBLE : View.GONE}"
                 android:text="Удалить"
                 android:textAllCaps="false"
                 android:textSize="18dp" />
