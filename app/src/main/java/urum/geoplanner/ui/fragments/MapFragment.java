@@ -73,6 +73,7 @@ import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
 import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Utils.enableLayout;
 import static urum.geoplanner.utils.Utils.findNavController;
+import static urum.geoplanner.utils.Utils.getAddressFromLocation;
 import static urum.geoplanner.utils.Utils.getLastLocation;
 import static urum.geoplanner.utils.Utils.round;
 
@@ -329,9 +330,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         StringBuilder info = new StringBuilder();
         StringBuilder infoExit = new StringBuilder();
 
-        double lat = places.get(i).getLatitude();
-        double lng = places.get(i).getLongitude();
-
         int radius = places.get(i).getCondition();
 
         int pos = places.get(i).getPosition();
@@ -568,7 +566,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onMyLocationClick(@NonNull Location location) {
         try {
             LatLng addPoint = new LatLng(location.getLatitude(), location.getLongitude());
-            Log.i("mytag", "lat" + addPoint.latitude + "lng: " + addPoint.longitude);
 
             List<Address> addresses;
             addresses = geocoder.getFromLocation(addPoint.latitude, addPoint.longitude, 5);
@@ -618,7 +615,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             .append(addressLine);
                 }
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-
             }
         } catch (IOException ioException) {
             Log.d(TAG, "Сервис не работает", ioException);
