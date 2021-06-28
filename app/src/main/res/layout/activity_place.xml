@@ -86,24 +86,29 @@
                 android:paddingLeft="12.4dp"
                 app:icon="@drawable/ic_gps_place" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/radiusBox"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/radiusTextBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/addressBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/condition"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#FFF"
-                    android:digits="0123456789"
-                    android:hint="Введите радиус (в метрах)"
-                    android:inputType="text|number|numberSigned"
-                    android:maxLength="10"
-                    android:singleLine="true" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_below="@+id/addressBox"
+                android:text="Установите радиус:"
+                android:paddingTop="6dp"
+                android:layout_margin="2dp"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                />
+            <com.google.android.material.slider.Slider
+                android:id="@+id/radiusBox"
+                android:layout_marginTop="-20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/radiusTextBox"
+                app:labelBehavior="withinBounds"
+                android:value="150.0"
+                android:stepSize="5.0"
+                android:valueFrom="50.0"
+                android:valueTo="500.0" />
 
             <CheckBox
                 android:id="@+id/entering"
