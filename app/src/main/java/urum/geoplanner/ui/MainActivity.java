@@ -337,11 +337,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         return super.onOptionsItemSelected(item);
     }
 
-
     public void addPlace(View view) {
         navController.navigate(R.id.action_list_places_to_placeActivity);
-        //Intent intent = new Intent(this, PlaceActivity.class);
-        //startActivity(intent);
     }
 
     @Override

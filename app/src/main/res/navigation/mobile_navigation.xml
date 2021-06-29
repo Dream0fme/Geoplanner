@@ -28,7 +28,11 @@
     <fragment
         android:id="@+id/archive"
         android:name="urum.geoplanner.ui.fragments.ArchivePlacesFragment"
-        android:label="ArchivePlacesFragment" />
+        android:label="ArchivePlacesFragment" >
+        <action
+            android:id="@+id/action_archive_to_list_places"
+            app:destination="@id/list_places" />
+    </fragment>
     <fragment
         android:id="@+id/settings"
         android:name="urum.geoplanner.ui.fragments.SettingsFragment"

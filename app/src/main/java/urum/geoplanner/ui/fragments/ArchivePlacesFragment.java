@@ -35,6 +35,8 @@ import urum.geoplanner.ui.MainActivity;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
+import static urum.geoplanner.utils.Utils.findNavController;
+
 
 public class ArchivePlacesFragment extends Fragment {
 
@@ -62,8 +64,10 @@ public class ArchivePlacesFragment extends Fragment {
         //setRetainInstance(true);
         // Костыль одним словом
         mainActivity = (MainActivity) getActivity();
-        mainActivity.changeToolbarForArchive();
-        mainActivity.changeLayoutForArchive(null);
+        if (mainActivity != null) {
+            mainActivity.changeToolbarForArchive();
+            mainActivity.changeLayoutForArchive(null);
+        }
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
@@ -80,7 +84,7 @@ public class ArchivePlacesFragment extends Fragment {
                 } else {
                     mainActivity.binding.navView.setVisibility(View.VISIBLE);
                 }
-                mainActivity.navController.navigate(R.id.list_places);
+                findNavController(ArchivePlacesFragment.this).navigateUp();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
