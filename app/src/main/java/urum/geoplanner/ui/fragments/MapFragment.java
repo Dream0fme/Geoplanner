@@ -142,11 +142,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void handleOnBackPressed() {
                 if (!startAnimation) {
-                    if (getParentFragmentManager().getBackStackEntryCount() > 0) {
-                        getParentFragmentManager().popBackStackImmediate();
-                    } else {
-                        requireActivity().onBackPressed();
-                    }
+//                    if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+//                        getParentFragmentManager().popBackStackImmediate();
+//                    } else {
+//                        requireActivity().onBackPressed();
+//                    }
+                    mainActivity.navController.navigate(R.id.list_places);
                 }
             }
         };
