@@ -9,20 +9,20 @@ import com.google.android.gms.maps.model.LatLng;
 
 import static urum.geoplanner.utils.Utils.getLastLocation;
 
-public class LastLocationListener extends LiveData<LatLng> {
+public class LastLocation extends LiveData<LatLng> {
 
     Context context;
     @SuppressLint("StaticFieldLeak")
-    private static LastLocationListener instance;
+    private static LastLocation instance;
 
-    public static LastLocationListener getInstance(LatLng location, Context context) {
+    public static LastLocation getInstance(LatLng location, Context context) {
         if (instance == null) {
-            instance = new LastLocationListener(location, context);
+            instance = new LastLocation(location, context);
         }
         return instance;
     }
 
-    private LastLocationListener(LatLng value, Context context) {
+    private LastLocation(LatLng value, Context context) {
         super(value);
         this.context = context;
     }

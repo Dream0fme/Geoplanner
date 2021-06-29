@@ -55,7 +55,7 @@ import java.util.Locale;
 import urum.geoplanner.R;
 import urum.geoplanner.databinding.FragmentMapBinding;
 import urum.geoplanner.db.entities.Place;
-import urum.geoplanner.service.LastLocationListener;
+import urum.geoplanner.service.LastLocation;
 import urum.geoplanner.ui.MainActivity;
 import urum.geoplanner.ui.PlaceActivity;
 import urum.geoplanner.utils.GeocoderAdapter;
@@ -263,7 +263,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
             //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
         } else {
-            LastLocationListener.getInstance(null, requireActivity()).observe(this, new Observer<LatLng>() {
+            LastLocation.getInstance(null, requireActivity()).observe(this, new Observer<LatLng>() {
                 @Override
                 public void onChanged(@Nullable LatLng location) {
                     myLocation = location;

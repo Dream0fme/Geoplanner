@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import urum.geoplanner.databinding.ActivityHomeBinding;
 import urum.geoplanner.service.ConnectorService;
-import urum.geoplanner.service.LastLocationListener;
+import urum.geoplanner.service.LastLocation;
 
 import static urum.geoplanner.utils.Utils.getLastLocation;
 
@@ -39,7 +39,7 @@ public class ActivityHome extends AppCompatActivity {
         getLifecycle().addObserver(connectorService);
 
         LatLng lastLocation = getLastLocation(this);
-        LastLocationListener.getInstance(lastLocation, this);
+        LastLocation.getInstance(lastLocation, this);
 
         new Handler().postDelayed(new Runnable() {
             @Override
