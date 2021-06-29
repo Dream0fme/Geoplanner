@@ -4,11 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="maxRadiusValue"
+            type="float" />
 
         <variable
             name="place"
             type="urum.geoplanner.db.entities.Place" />
+
+
     </data>
 
     <LinearLayout
@@ -80,8 +87,7 @@
                         android:backgroundTint="#FFF"
                         android:hint="Введите адрес"
                         android:maxLength="120"
-                        android:singleLine="true"
-                        />
+                        android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -116,9 +122,9 @@
                     android:layout_below="@+id/radiusTextBox"
                     android:layout_marginTop="-20dp"
                     android:stepSize="5.0"
-                    android:value="150.0"
+                    android:value="@{place != null ? ((float)place.condition) : 150.0f}"
                     android:valueFrom="50.0"
-                    android:valueTo="500.0"
+                    android:valueTo="@{maxRadiusValue}"
                     app:labelBehavior="withinBounds" />
 
                 <CheckBox
@@ -331,10 +337,10 @@
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
                 android:onClick="delete"
-                android:visibility="@{place != null ? View.VISIBLE : View.GONE}"
                 android:text="Удалить"
                 android:textAllCaps="false"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:visibility="@{place != null ? View.VISIBLE : View.GONE}" />
         </LinearLayout>
     </LinearLayout>
 </layout>

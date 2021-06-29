@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Address;
@@ -31,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.content.CursorLoader;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.snackbar.Snackbar;
@@ -49,7 +51,21 @@ import urum.geoplanner.utils.GeocoderAdapter;
 import urum.geoplanner.viewmodel.ModelFactory;
 import urum.geoplanner.viewmodel.PlaceViewModel;
 
-import static urum.geoplanner.utils.Constants.*;
+import static urum.geoplanner.utils.Constants.ADDRESS_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.CLOSEAPPINTENTFILTER;
+import static urum.geoplanner.utils.Constants.FROM_ACTIVITY_PLACE;
+import static urum.geoplanner.utils.Constants.FROM_MAIN;
+import static urum.geoplanner.utils.Constants.FROM_MAPS;
+import static urum.geoplanner.utils.Constants.FROM_NOTIFICATION_TO_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.ID;
+import static urum.geoplanner.utils.Constants.ID_FROM_NOTIFICATION;
+import static urum.geoplanner.utils.Constants.LATITUDE_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.LATITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_MAPS;
+import static urum.geoplanner.utils.Constants.LONGITUDE_FROM_PLACEACTIVITY;
+import static urum.geoplanner.utils.Constants.MAX_RADIUS;
+import static urum.geoplanner.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE;
+import static urum.geoplanner.utils.Constants.TAG;
 import static urum.geoplanner.utils.Utils.round;
 
 public class PlaceActivity extends AppCompatActivity {
@@ -124,6 +140,11 @@ public class PlaceActivity extends AppCompatActivity {
 
 
         String[] actions = getResources().getStringArray(R.array.actions);
+
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        float maxRadius = Float.parseFloat(sharedPreferences.getString(MAX_RADIUS, "500.0"));
+        binding.setMaxRadiusValue(maxRadius);
 
         geocoder = new Geocoder(this, Locale.getDefault());
         addresses = null;
@@ -342,7 +363,7 @@ public class PlaceActivity extends AppCompatActivity {
         if (placeId > 0) { // если 0, то добавление
             Place place = mPlaceViewModel.getPlace(placeId);
             binding.setPlace(place);
-            binding.conditionBox.setValue(place.getCondition());
+            //binding.conditionBox.setValue(place.getCondition());
 
             Pattern patternGEO = Pattern.compile("^(\\-?\\d+(\\.\\d+)?),\\s*(\\-?\\d+(\\.\\d+)?)$");
             Matcher geoMatcher = patternGEO.matcher(place.getAddress());
