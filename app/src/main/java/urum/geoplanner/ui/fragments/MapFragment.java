@@ -195,8 +195,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mPlaceViewModel.getPlacesFromPlaces().observe(this, new Observer<List<Place>>() {
             @Override
             public void onChanged(@Nullable List<Place> places) {
+                mMap.clear();
                 try {
-                    if (!places.isEmpty()) {
+                    if (places != null && !places.isEmpty()) {
+                        Log.d(TAG, "IN MAPS: " + places.toString());
                         for (int i = 0; i < places.size(); i++) {
                             String namePlace = places.get(i).getName();
                             long id = places.get(i).getId();

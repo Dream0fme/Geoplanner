@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.Settings;
@@ -363,7 +362,6 @@ public class PlaceActivity extends AppCompatActivity {
         if (placeId > 0) { // если 0, то добавление
             Place place = mPlaceViewModel.getPlace(placeId);
             binding.setPlace(place);
-            //binding.conditionBox.setValue(place.getCondition());
 
             Pattern patternGEO = Pattern.compile("^(\\-?\\d+(\\.\\d+)?),\\s*(\\-?\\d+(\\.\\d+)?)$");
             Matcher geoMatcher = patternGEO.matcher(place.getAddress());
@@ -417,8 +415,9 @@ public class PlaceActivity extends AppCompatActivity {
                         //Log.i("mytag", "lat" + lat + " lng: " + lng);
                     } else {
                         binding.addressBox.setText(addressFromMaps);
-                        lat = extras.getDouble("latFromMaps");
-                        lng = extras.getDouble("lngFromMaps");
+                        lat = extras.getDouble(LATITUDE_FROM_MAPS, 0.0);
+                        lng = extras.getDouble(LONGITUDE_FROM_MAPS, 0.0);
+
                         if (!binding.addressBox.isEnabled()) {
                             binding.addressBox.setEnabled(true);
                         }
@@ -647,6 +646,7 @@ public class PlaceActivity extends AppCompatActivity {
                                 lng = addressName.getLongitude();
                             }
                         }
+
                         Place place = new Place(placeId, namePlace, addressEdit, condition, lat, lng, checkBoxEnter, position, phone, msg, checkBoxExit, positionExit, phoneExit, msgExit);
 
                         if (placeId > 0) {
@@ -1091,58 +1091,6 @@ public class PlaceActivity extends AppCompatActivity {
         }
     }
 
-
-    private boolean checkPermissions() {
-        boolean permissionLocation = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        boolean permissionCall = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.CALL_PHONE);
-        boolean permissionSMS = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.SEND_SMS);
-        boolean permissionReadContacts = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CONTACTS);
-        boolean permissionBackGroundLoc;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            permissionBackGroundLoc = PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-        } else {
-            permissionBackGroundLoc = true;
-        }
-        boolean permissionDNDaccess = mNotificationManager.isNotificationPolicyAccessGranted();
-        return permissionCall && permissionLocation && permissionSMS &&
-                permissionReadContacts && permissionDNDaccess && permissionBackGroundLoc;
-    }
-
-    private void requestPermissions() {
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION);
-        boolean shouldProvideCall =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.CALL_PHONE);
-        boolean shouldProvideSMS =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.SEND_SMS);
-        boolean shouldProvideReadCont =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.READ_CONTACTS);
-        boolean shouldBackgroundLoc;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            shouldBackgroundLoc =
-                    ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-        } else {
-            shouldBackgroundLoc = true;
-        }
-
-        if (shouldProvideRationale || shouldProvideCall || shouldProvideSMS
-                || shouldProvideReadCont || shouldBackgroundLoc || !mNotificationManager.isNotificationPolicyAccessGranted()) {
-            //Intent intent = new Intent(this, MainActivity.class);
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            //startActivity(intent);
-        }
-    }
-
     public void grantResult(boolean grant, String permission, final int pos, boolean DND) {
         boolean showRationale;
         if (permission != null) {
@@ -1161,7 +1109,6 @@ public class PlaceActivity extends AppCompatActivity {
             }
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
