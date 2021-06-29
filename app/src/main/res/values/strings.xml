@@ -90,6 +90,7 @@
     <string name="service_update">Частота обновления геолокации</string>
     <string name="service_update_in_meters">Обновления при смещении в метрах</string>
     <string name="geo_accuracy_in_meters">Предел точности геолокации в метрах</string>
+    <string name="max_radius_tittle">Предел полосы прокрутки радиуса</string>
     <string name="service_actice">Активность сервиса</string>
     <string name="service_autostart">Автозапуск при включении</string>
     <string name="service_not_active">Сервис выключен</string>

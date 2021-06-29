@@ -25,4 +25,16 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string-array name="max_radius_entries">
+        <item>500 метров</item>
+        <item>700 метров</item>
+        <item>1 километр</item>
+    </string-array>
+
+    <string-array name="max_radius_value">
+        <item>500.0</item>
+        <item>700.0</item>
+        <item>1000.0</item>
+    </string-array>
 </resources>

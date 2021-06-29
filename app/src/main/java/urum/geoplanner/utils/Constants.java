@@ -42,6 +42,7 @@ public final class Constants {
     public static final String GEO_ACCURACY = "geo_accuracy";
     public static final String SWITCH_SERVICE = "switchService";
     public static final String CHECK_BOX_AUTO_START = "checkBoxAutoStart";
+    public static final String MAX_RADIUS = "maxRadius";
 
 
     /* Channel notifications */
