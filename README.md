@@ -22,3 +22,5 @@
      * Maps API
  * LifecycleService
  * [EasyPermissions](https://github.com/googlesamples/easypermissions)
+____
+ Установочный файл: [GeoPlanner.apk](https://drive.google.com/file/d/1-EQtF0j8O4012UN87R4RjWJiajatUWLY/view?usp=sharing)
