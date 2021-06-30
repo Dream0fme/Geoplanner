@@ -46,7 +46,7 @@
             android:defaultValue="45" />
 
         <androidx.preference.ListPreference
-            app:defaultValue="500"
+            app:defaultValue="500.0"
             app:dependency="switchService"
             app:entries="@array/max_radius_entries"
             app:entryValues="@array/max_radius_value"
