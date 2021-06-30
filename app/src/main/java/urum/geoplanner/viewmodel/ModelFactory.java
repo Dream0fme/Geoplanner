@@ -12,7 +12,7 @@ public class ModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final Application application;
 
 
-    public ModelFactory(Application application) {
+    public ModelFactory(@NonNull Application application) {
         super();
         this.application = application;
     }
