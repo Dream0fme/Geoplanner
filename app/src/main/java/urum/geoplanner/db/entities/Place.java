@@ -6,10 +6,11 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 @Entity(tableName = "places")
-public class Place implements Serializable {
+public class Place implements Serializable, Comparable, Cloneable {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -257,5 +258,59 @@ public class Place implements Serializable {
                 ", numberExit='" + numberExit + '\'' +
                 ", smsExit='" + smsExit + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Place place = (Place) o;
+        return id == place.id &&
+                activation == place.activation &&
+                archiving == place.archiving &&
+                condition == place.condition &&
+                Double.compare(place.latitude, latitude) == 0 &&
+                Double.compare(place.longitude, longitude) == 0 &&
+                checkboxEnter == place.checkboxEnter &&
+                position == place.position &&
+                checkboxExit == place.checkboxExit &&
+                positionExit == place.positionExit &&
+                name.equals(place.name) &&
+                address.equals(place.address) &&
+                number.equals(place.number) &&
+                sms.equals(place.sms) &&
+                numberExit.equals(place.numberExit) &&
+                smsExit.equals(place.smsExit);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, activation, archiving, address, condition, latitude, longitude, checkboxEnter, position, number, sms, checkboxExit, positionExit, numberExit, smsExit);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (this == o) return 0;
+        if (o == null || getClass() != o.getClass()) return 1;
+        Place place = (Place) o;
+        if (id == place.id &&
+                activation == place.activation &&
+                archiving == place.archiving &&
+                condition == place.condition &&
+                Double.compare(place.latitude, latitude) == 0 &&
+                Double.compare(place.longitude, longitude) == 0 &&
+                checkboxEnter == place.checkboxEnter &&
+                position == place.position &&
+                checkboxExit == place.checkboxExit &&
+                positionExit == place.positionExit &&
+                name.equals(place.name) &&
+                address.equals(place.address) &&
+                number.equals(place.number) &&
+                sms.equals(place.sms) &&
+                numberExit.equals(place.numberExit) &&
+                smsExit.equals(place.smsExit)) {
+            return 0;
+        }
+        return 1;
     }
 }
