@@ -92,9 +92,9 @@
                 android:layout_below="@id/enterText"
                 android:visibility="@{place.checkboxExit == 1 ? View.VISIBLE : View.GONE}"
                 app:entry="@{@string/exitUp}"
-                app:number="@{place.number}"
-                app:sms="@{place.sms}"
-                app:pos="@{place.position}"
+                app:number="@{place.numberExit}"
+                app:sms="@{place.smsExit}"
+                app:pos="@{place.positionExit}"
                 android:textAppearance="?android:textAppearanceMedium" />
 
             <com.google.android.material.button.MaterialButton
