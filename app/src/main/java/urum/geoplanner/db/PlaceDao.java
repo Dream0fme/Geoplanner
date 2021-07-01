@@ -21,7 +21,7 @@ public interface PlaceDao {
     Place getPlace(long id);
 
     // Select All
-    @Query("SELECT * FROM places WHERE archiving = 0 ORDER BY name ASC")
+    @Query("SELECT * FROM places WHERE archiving = 0 ORDER BY sort_id ASC")
     LiveData<List<Place>> getPlacesFromPlaces();
 
     @Query("SELECT * FROM places WHERE archiving = 0 and activation = 1 ORDER BY name ASC")

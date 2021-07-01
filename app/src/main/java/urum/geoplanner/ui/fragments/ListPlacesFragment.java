@@ -210,7 +210,8 @@ public class ListPlacesFragment extends Fragment {
                 activeEditingMod = false;
                 callback.editing();
                 mAdapter.editMod();
-                mAdapter.notifyDataSetChanged();
+                //mAdapter.notifyDataSetChanged();
+                mAdapter.setSorting();
                 mainActivity.binding.fabButton.show();
                 snackBarShowArchive();
                 menu.findItem(R.id.buttonComplete).setVisible(false);

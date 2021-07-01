@@ -15,6 +15,7 @@ import urum.geoplanner.service.ConnectorService;
 import urum.geoplanner.service.LastLocation;
 
 import static urum.geoplanner.utils.Utils.getLastLocation;
+import static urum.geoplanner.utils.Utils.rnd;
 
 
 public class ActivityHome extends AppCompatActivity {
@@ -51,11 +52,6 @@ public class ActivityHome extends AppCompatActivity {
                 finish();
             }
         }, SPLASH_TIME);
-    }
-
-    public static int rnd(int min, int max) {
-        max -= min;
-        return (int) (Math.random() * ++max) + min;
     }
 
     private void playProgress() {

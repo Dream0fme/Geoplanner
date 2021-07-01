@@ -304,16 +304,13 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceItemVie
         notifyItemMoved(fromPosition, toPosition);
     }
 
-    public void onItemClear() {
-        //adapter.open();
+    public void setSorting() {
         for (int i = 0; i < mItemList.size(); i++) {
             Place place = mItemList.get(i);
             place.setSort(i);
             mPlaceViewModel.updateToPlaces(place);
-            //adapter.update(place);
         }
         notifyDataSetChanged();
-        //adapter.close();
     }
 
     public void setTouchHelper(ItemTouchHelper mItemTouchHelper) {
