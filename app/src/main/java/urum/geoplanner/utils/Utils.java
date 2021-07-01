@@ -92,6 +92,9 @@ public class Utils {
             boolean isNetworkEnabled = false;
             boolean isPassiveEnabled = false;
 
+            List<String> providers = lm.getProviders(true);
+            Log.d(TAG, providers.toString());
+
             if (lm != null) {
                 isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
                 isNetworkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);

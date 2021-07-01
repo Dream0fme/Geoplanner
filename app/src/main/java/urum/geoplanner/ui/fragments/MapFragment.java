@@ -269,7 +269,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
             });
 
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+            if (myLocation != null) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+            }
         }
         //mMap.setOnMapLongClickListener(this);
     }

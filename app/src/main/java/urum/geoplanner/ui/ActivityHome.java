@@ -41,6 +41,8 @@ public class ActivityHome extends AppCompatActivity {
         LatLng lastLocation = getLastLocation(this);
         LastLocation.getInstance(lastLocation, this);
 
+        Log.d("mytag", "lastLocation" + lastLocation);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

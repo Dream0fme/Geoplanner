@@ -385,6 +385,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void requiresLocationPermission() {
         List<String> permsList = new ArrayList<String>() {{
             add(Manifest.permission.ACCESS_FINE_LOCATION);
+            add(Manifest.permission.ACCESS_COARSE_LOCATION);
+
         }};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             permsList.add(0, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
