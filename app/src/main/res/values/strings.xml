@@ -59,8 +59,10 @@
 
     <!-- Builder -->
     <string name="entry">при входе:</string>
+    <string name="entryDot">при входе.</string>
     <string name="entryUp">При входе:</string>
     <string name="exit">при выходе:</string>
+    <string name="exitDot">при выходе.</string>
     <string name="exitUp">При выходе:</string>
     <string name="address"><![CDATA[<font color=#000000>Адрес:</font>]]></string>
     <string name="addresslog">Адрес:</string>

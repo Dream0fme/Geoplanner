@@ -386,22 +386,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 case 3:
                     info.append(getString(R.string.dnd_on))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.entry));
+                            .append(getString(R.string.entryDot));
                     break;
                 case 4:
                     info.append(getString(R.string.dnd_off))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.entry));
+                            .append(getString(R.string.entryDot));
                     break;
                 case 5:
                     info.append(getString(R.string.wifi_on))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.entry));
+                            .append(getString(R.string.entryDot));
                     break;
                 case 6:
                     info.append(getString(R.string.wifi_off))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.entry));
+                            .append(getString(R.string.entryDot));
                     break;
                 default:
                     break;
@@ -438,22 +438,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 case 3:
                     infoExit.append(getString(R.string.dnd_on))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.exit));
+                            .append(getString(R.string.exitDot));
                     break;
                 case 4:
                     infoExit.append(getString(R.string.dnd_off))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.exit));
+                            .append(getString(R.string.exitDot));
                     break;
                 case 5:
                     infoExit.append(getString(R.string.wifi_on))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.exit));
+                            .append(getString(R.string.exitDot));
                     break;
                 case 6:
                     infoExit.append(getString(R.string.wifi_off))
                             .append(getString(R.string.blank_space))
-                            .append(getString(R.string.exit));
+                            .append(getString(R.string.exitDot));
                     break;
                 default:
                     break;
