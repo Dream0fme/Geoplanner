@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
+
 import java.util.List;
 
 import urum.geoplanner.R;
@@ -97,6 +98,8 @@ public class ListPlacesFragment extends Fragment {
 
         setHasOptionsMenu(true);
         mainActivity = (MainActivity) getActivity();
+
+
 
         return binding.getRoot();
     }
